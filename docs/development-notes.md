@@ -11,7 +11,7 @@ El proyecto se desarrollará de forma progresiva, dividiendo el trabajo en los s
 * **Módulo 7:** RiskEngineService, FraudAnalysisService, RiskAnalysisController. Se implementó el motor de reglas interno que detecta montos altos, horarios inusuales y clientes en revisión, auto-generando FraudAlerts para riesgos altos y actualizando el status de FinancialTransaction. (COMPLETADO)
 * **Módulo 8:** FraudAlertController, FraudAlertService, FraudAlertMapper, DTOs. Integración estricta entre analistas y transacciones (al confirmar fraude, se rechaza la transacción). Auditoría implícita con `reviewedBy` y timestamps. (COMPLETADO)
 * **Módulo 9:** DashboardController, DashboardService, DTOs de métricas. Se crearon las vistas agregadas para Cards, Charts, listas recientes y un Overview completo. Fuerte uso de `@Query` y conteos de repositorios JPA. (COMPLETADO)
-* **Módulo 10:** microservicio IA con FastAPI.
+* **Módulo 10:** Proyecto Angular 17. Configurado con Bootstrap y Chart.js. Integración real con el backend mediante `AuthService`, interceptores funcionales (Bearer JWT) y `AuthGuard`. Se construyó un Layout base y el `DashboardComponent` que carga las métricas, tarjetas e insignias coloreadas. (COMPLETADO)
 * **Módulo 11:** integración Java Spring Boot con FastAPI.
 * **Módulo 12:** auditoría de acciones.
 * **Módulo 13:** pruebas unitarias.

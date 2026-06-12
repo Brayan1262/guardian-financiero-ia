@@ -1,0 +1,209 @@
+<div class="dashboard-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold text-dark mb-1">Visión General</h2>
+      <p class="text-muted mb-0">Monitoreo en tiempo real de métricas antifraude.</p>
+    </div>
+    <div class="text-end" *ngIf="overview">
+      <small class="text-muted"><i class="bi bi-clock-history me-1"></i>Actualizado:</small><br>
+      <span class="fw-semibold">{{ overview.summary.generatedAt | date:'medium' }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Obteniendo métricas...</p>
+  </div>
+
+  <div *ngIf="!isLoading && overview">
+    <!-- Metric Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-12 col-sm-6 col-xl-3" *ngFor="let card of overview.metricCards">
+        <div class="card metric-card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="text-muted fw-semibold mb-0 text-uppercase" style="font-size: 0.8rem;">{{ card.title }}</h6>
+              <div class="icon-circle" [ngClass]="{
+                'bg-primary-subtle text-primary': card.type === 'TRANSACTIONS',
+                'bg-success-subtle text-success': card.type === 'CUSTOMERS',
+                'bg-danger-subtle text-danger': card.type === 'ALERTS',
+                'bg-info-subtle text-info': card.type === 'AMOUNT'
+              }">
+                <i class="bi" [ngClass]="{
+                  'bi-currency-exchange': card.type === 'TRANSACTIONS',
+                  'bi-people-fill': card.type === 'CUSTOMERS',
+                  'bi-bell-fill': card.type === 'ALERTS',
+                  'bi-cash-coin': card.type === 'AMOUNT'
+                }"></i>
+              </div>
+            </div>
+            <h3 class="fw-bold text-dark mb-1">{{ card.value }}</h3>
+            <small class="text-secondary">{{ card.description }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+      <!-- Status Bars -->
+      <div class="col-12 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 chart-card">
+          <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+            <h6 class="fw-bold text-dark mb-0">Transacciones por Estado</h6>
+          </div>
+          <div class="card-body p-4">
+            <div class="bar-row mb-3" *ngFor="let bar of txStatusBars">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="bar-label fw-semibold text-secondary">{{ bar.label }}</span>
+                <span class="bar-value fw-bold text-dark">{{ bar.value }}</span>
+              </div>
+              <div class="bar-track rounded-pill overflow-hidden bg-light">
+                <div class="bar-fill rounded-pill" [ngClass]="bar.colorClass" [style.width.%]="bar.percent"></div>
+              </div>
+            </div>
+            <div *ngIf="txStatusBars.length === 0" class="text-center text-muted mt-4">
+              <small>No hay datos disponibles.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Risk Bars -->
+      <div class="col-12 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 chart-card">
+          <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+            <h6 class="fw-bold text-dark mb-0">Riesgo en Transacciones</h6>
+          </div>
+          <div class="card-body p-4">
+            <div class="bar-row mb-3" *ngFor="let bar of txRiskBars">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="bar-label fw-semibold text-secondary">{{ bar.label }}</span>
+                <span class="bar-value fw-bold text-dark">{{ bar.value }}</span>
+              </div>
+              <div class="bar-track rounded-pill overflow-hidden bg-light">
+                <div class="bar-fill rounded-pill" [ngClass]="bar.colorClass" [style.width.%]="bar.percent"></div>
+              </div>
+            </div>
+            <div *ngIf="txRiskBars.length === 0" class="text-center text-muted mt-4">
+              <small>No hay datos disponibles.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Alerts Bars -->
+      <div class="col-12 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 chart-card">
+          <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+            <h6 class="fw-bold text-dark mb-0">Alertas por Riesgo</h6>
+          </div>
+          <div class="card-body p-4">
+            <div class="bar-row mb-3" *ngFor="let bar of alertsRiskBars">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="bar-label fw-semibold text-secondary">{{ bar.label }}</span>
+                <span class="bar-value fw-bold text-dark">{{ bar.value }}</span>
+              </div>
+              <div class="bar-track rounded-pill overflow-hidden bg-light">
+                <div class="bar-fill rounded-pill" [ngClass]="bar.colorClass" [style.width.%]="bar.percent"></div>
+              </div>
+            </div>
+            <div *ngIf="alertsRiskBars.length === 0" class="text-center text-muted mt-4">
+              <small>No hay datos disponibles.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Tables Row -->
+    <div class="row g-4">
+      <!-- Recent Transactions -->
+      <div class="col-12 col-xl-7">
+        <div class="card border-0 shadow-sm rounded-4">
+          <div class="card-header bg-white border-bottom pt-4 pb-3 px-4 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold text-dark mb-0">Últimas Transacciones</h6>
+            <a routerLink="/transactions" class="btn btn-sm btn-light rounded-pill px-3">Ver todas</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-muted" style="font-size: 0.85rem;">
+                  <tr>
+                    <th class="ps-4">ID</th>
+                    <th>Cliente</th>
+                    <th>Monto</th>
+                    <th>Riesgo</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody class="border-top-0">
+                  <tr *ngFor="let tx of overview.recentTransactions">
+                    <td class="ps-4 fw-semibold text-secondary">#{{ tx.id }}</td>
+                    <td>
+                      <div class="fw-semibold text-dark">{{ tx.customerFullName }}</div>
+                      <small class="text-muted">{{ tx.channel }}</small>
+                    </td>
+                    <td class="fw-bold text-dark">${{ tx.amount }}</td>
+                    <td>
+                      <span class="badge rounded-pill" [ngClass]="getRiskBadgeClass(tx.riskLevel)">{{ tx.riskLevel }} ({{ tx.riskScore }})</span>
+                    </td>
+                    <td>
+                      <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(tx.status)">{{ tx.status }}</span>
+                    </td>
+                    <td class="text-muted" style="font-size: 0.85rem;">{{ tx.transactionDateTime | date:'short' }}</td>
+                  </tr>
+                  <tr *ngIf="overview.recentTransactions.length === 0">
+                    <td colspan="6" class="text-center py-4 text-muted">No hay transacciones recientes.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Alerts -->
+      <div class="col-12 col-xl-5">
+        <div class="card border-0 shadow-sm rounded-4">
+          <div class="card-header bg-white border-bottom pt-4 pb-3 px-4 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold text-dark mb-0">Alertas Recientes</h6>
+            <a routerLink="/alerts" class="btn btn-sm btn-light rounded-pill px-3">Ver todas</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-muted" style="font-size: 0.85rem;">
+                  <tr>
+                    <th class="ps-4">Tx ID</th>
+                    <th>Riesgo</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody class="border-top-0">
+                  <tr *ngFor="let alert of overview.recentAlerts">
+                    <td class="ps-4 fw-semibold text-secondary">#{{ alert.transactionId }}</td>
+                    <td>
+                      <span class="badge rounded-pill" [ngClass]="getRiskBadgeClass(alert.riskLevel)">{{ alert.riskLevel }}</span>
+                    </td>
+                    <td>
+                      <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(alert.status)">{{ alert.status }}</span>
+                    </td>
+                    <td class="text-muted" style="font-size: 0.85rem;">{{ alert.createdAt | date:'shortTime' }}</td>
+                  </tr>
+                  <tr *ngIf="overview.recentAlerts.length === 0">
+                    <td colspan="4" class="text-center py-4 text-muted">No hay alertas recientes.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

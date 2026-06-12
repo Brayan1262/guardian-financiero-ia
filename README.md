@@ -65,7 +65,8 @@ guardian-financiero-ia/
 * **Módulo 7:** motor antifraude basado en reglas. (Completado)
 * **Módulo 8:** generación y gestión de alertas. (Completado)
 * **Módulo 9:** dashboard backend y métricas antifraude. (Completado)
-* **Módulo 10:** microservicio IA con FastAPI.
+* **Módulo 10:** frontend Angular base y dashboard visual. (Completado)
+* **Módulo 11:** integración Java Spring Boot con FastAPI. (Completado)
 
 ## Flujo general del sistema
 1. El cliente o sistema externo envía una transacción al backend (Spring Boot).
@@ -80,7 +81,7 @@ guardian-financiero-ia/
 La base de datos está completamente configurada. Al ejecutarse la aplicación, las entidades de JPA crearán y actualizarán el esquema automáticamente.
 
 ## Estado actual
-**Módulo 9:** Implementado el backend del Dashboard. Se construyeron los endpoints de analítica (`/api/dashboard/**`) que consolidan transacciones, alertas y clientes para proveer KPIs, datos para gráficos (Charts) y vistas recientes que alimentarán al futuro panel de Angular.
+**Módulo 10:** Implementado el Frontend Angular. El sistema cuenta con autenticación JWT desde la UI, Sidebar, Topbar y un espectacular Dashboard visual usando Chart.js y Bootstrap que carga mediante el endpoint unificado de métricas. Las rutas están protegidas con Guards funcionales.
 
 ---
 **Autor:** Brayan Jair Chavez Oscor
