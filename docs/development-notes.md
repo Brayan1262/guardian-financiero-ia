@@ -4,6 +4,13 @@ El proyecto se desarrollará de forma progresiva, dividiendo el trabajo en los s
 
 * **Módulo 1:** estructura base del monorepo.
 * **Módulo 2:** backend Java Spring Boot base.
+  * backend Spring Boot base
+  * endpoints /
+  * endpoint /api/health
+  * Swagger
+  * configuración PostgreSQL inicial
+  * estructura por capas
+  * manejo global de errores
 * **Módulo 3:** configuración de PostgreSQL.
 * **Módulo 4:** autenticación JWT y roles.
 * **Módulo 5:** gestión de clientes.

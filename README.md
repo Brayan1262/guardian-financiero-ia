@@ -39,7 +39,7 @@ Crear una plataforma robusta y escalable que permita registrar operaciones, eval
 
 ## Estructura del proyecto
 ```text
-finguard-ai/
+guardian-financiero-ia/
 ├── backend-java/
 ├── frontend-angular/
 ├── ai-service/
@@ -65,7 +65,7 @@ finguard-ai/
 7. Los analistas gestionan (aprueban, rechazan, investigan) las alertas desde la interfaz web.
 
 ## Estado actual
-**Módulo 1:** estructura inicial base del monorepo y documentación.
+**Módulo 2:** Backend Java Spring Boot base creado (estructura, Swagger, manejo de errores, DB config).
 
 ---
 **Autor:** Brayan Jair Chavez Oscor
