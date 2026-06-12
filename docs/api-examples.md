@@ -190,3 +190,42 @@
 
 ### Resumen estadístico
 **GET /api/alerts/summary**
+
+---
+
+## Dashboard y Métricas (Módulo 9)
+
+### Resumen General (Summary)
+**GET /api/dashboard/summary**
+*Requiere Header: `Authorization: Bearer <TOKEN>`*
+```json
+{
+  "totalCustomers": 1,
+  "totalTransactions": 2,
+  "totalTransactionAmount": 12500.00,
+  "averageTransactionAmount": 6250.00,
+  "totalAlerts": 1,
+  "highRiskTransactions": 2,
+  "criticalRiskTransactions": 0,
+  "generatedAt": "2026-06-12T17:00:00"
+}
+```
+
+### Datos para Gráficos (Charts)
+**GET /api/dashboard/charts**
+```json
+{
+  "transactionsByStatus": [
+    { "label": "UNDER_REVIEW", "value": 2 },
+    { "label": "APPROVED", "value": 0 }
+  ],
+  "transactionsByRiskLevel": [
+    { "label": "HIGH", "value": 2 },
+    { "label": "LOW", "value": 0 }
+  ]
+}
+```
+
+### Overview Completo
+**GET /api/dashboard/overview**
+Devuelve todo el modelo del dashboard agrupado.

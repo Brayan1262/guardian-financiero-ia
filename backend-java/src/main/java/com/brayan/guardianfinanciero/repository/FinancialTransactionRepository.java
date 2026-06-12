@@ -23,6 +23,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     List<FinancialTransaction> findByTransactionDateTimeBetween(LocalDateTime start, LocalDateTime end);
     Long countByStatus(TransactionStatus status);
     Long countByRiskLevel(RiskLevel riskLevel);
+    Long countByChannel(TransactionChannel channel);
     Long countByCustomerIdAndTransactionDateTimeBetween(Long customerId, LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT SUM(f.amount) FROM FinancialTransaction f")
@@ -30,4 +31,12 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
 
     @Query("SELECT AVG(f.amount) FROM FinancialTransaction f")
     Double averageAmount();
+
+    @Query("SELECT COALESCE(SUM(f.amount), 0) FROM FinancialTransaction f")
+    BigDecimal getTotalTransactionAmount();
+
+    @Query("SELECT COALESCE(AVG(f.amount), 0) FROM FinancialTransaction f")
+    BigDecimal getAverageTransactionAmount();
+
+    List<FinancialTransaction> findTop5ByOrderByCreatedAtDesc();
 }

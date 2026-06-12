@@ -17,4 +17,5 @@ public interface FraudAlertRepository extends JpaRepository<FraudAlert, Long> {
     Optional<FraudAlert> findByTransactionId(Long transactionId);
     Long countByStatus(AlertStatus status);
     Long countByRiskLevel(RiskLevel riskLevel);
+    List<FraudAlert> findTop5ByOrderByCreatedAtDesc();
 }

@@ -239,6 +239,27 @@ Permite a los analistas revisar, comentar y resolver las alertas generadas autom
 ```
 6. Revisa la transacción original en `GET /api/transactions/{id}` y verás que ahora su estado es `REJECTED`.
 
+---
+
+## Módulo 9 - Dashboard backend y métricas antifraude
+
+Proporciona todos los datos consolidados y métricas analíticas listas para consumirse por un frontend (Angular) para renderizar un Dashboard empresarial.
+
+### Endpoints Disponibles
+Todos están bajo `/api/dashboard` y requieren rol de `ADMIN`, `ANALYST` o `AUDITOR`.
+- `GET /summary`: Métricas totales (clientes, transacciones, montos, alertas por riesgo, etc.).
+- `GET /cards`: Los 4 KPIs principales listos para pintarse en las tarjetas superiores.
+- `GET /charts`: Agrupaciones listas para gráficos (Tortas, Barras). Ej: Transacciones por estado, alertas por riesgo.
+- `GET /recent-transactions`: Las últimas 5 transacciones procesadas por el sistema.
+- `GET /recent-alerts`: Las últimas 5 alertas generadas.
+- `GET /overview`: Endpoint que agrupa **TODO** lo anterior en una única respuesta JSON gigante para optimizar la carga inicial de la pantalla.
+
+### Cómo probar en Swagger
+1. Haz Login y autoriza Swagger.
+2. Expande el controlador `dashboard-controller`.
+3. Prueba `GET /api/dashboard/overview`.
+4. Observa cómo el JSON contiene todas las agrupaciones matemáticas pre-calculadas en tiempo real.
+
 ## Base de Datos (PostgreSQL)
 Actualmente el proyecto utiliza el perfil `dev` por defecto. Este perfil **desactiva temporalmente** la autoconfiguración de la base de datos para permitir que el backend inicie correctamente de forma limpia y sin errores de conexión. La configuración de PostgreSQL está completamente preparada en el perfil `prod` y **se configurará y habilitará al 100% en el Módulo 3**, cuando comencemos a trabajar con las entidades y repositorios de datos.
 

@@ -14,4 +14,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByDocumentNumber(String documentNumber);
     List<Customer> findByStatus(CustomerStatus status);
     List<Customer> findByFullNameContainingIgnoreCase(String fullName);
+    long countByStatus(CustomerStatus status);
 }
