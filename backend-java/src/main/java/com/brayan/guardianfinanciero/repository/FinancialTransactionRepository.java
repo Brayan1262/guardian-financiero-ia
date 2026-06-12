@@ -23,6 +23,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     List<FinancialTransaction> findByTransactionDateTimeBetween(LocalDateTime start, LocalDateTime end);
     Long countByStatus(TransactionStatus status);
     Long countByRiskLevel(RiskLevel riskLevel);
+    Long countByCustomerIdAndTransactionDateTimeBetween(Long customerId, LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT SUM(f.amount) FROM FinancialTransaction f")
     BigDecimal sumTotalAmount();

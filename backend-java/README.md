@@ -179,6 +179,31 @@ Prepara las transacciones antes de que pasen por el motor antifraude. Aplica reg
 }
 ```
 
+---
+
+## Módulo 7 - Motor antifraude basado en reglas
+
+Motor interno que analiza las transacciones financieras en tiempo real y asigna un puntaje de riesgo (`riskScore`) utilizando diversas reglas parametrizables (Monto alto, horario inusual, canales digitales, ubicaciones distintas, etc.).
+
+### Endpoints Protegidos por Rol
+- `POST /api/risk-analysis/transactions/{id}`: Ejecuta el análisis sobre una transacción. (ADMIN, ANALYST)
+- `POST /api/risk-analysis/transactions/{id}/reanalyze`: Reanaliza una transacción existente. (ADMIN, ANALYST)
+- `POST /api/risk-analysis/pending`: Ejecuta el análisis masivo sobre las transacciones PENDING. (ADMIN, ANALYST)
+- `GET /api/risk-analysis/rules`: Listado de las reglas activas. (ADMIN, ANALYST, AUDITOR)
+
+### Rangos de Riesgo y Acciones
+- **0 - 29 (LOW)**: `APPROVED`. Operación aprobada automáticamente.
+- **30 - 59 (MEDIUM)**: `PENDING`. Operación pendiente de monitoreo.
+- **60 - 84 (HIGH)**: `UNDER_REVIEW`. Enviar operación a revisión manual por analista. ¡Genera **FraudAlert** automática!
+- **85+ (CRITICAL)**: `UNDER_REVIEW`. Bloquear temporalmente la operación y escalar. ¡Genera **FraudAlert** automática!
+- **Bloqueado**: Si el cliente está en estado `BLOCKED`, el riesgo es altísimo y la operación pasa automáticamente a `REJECTED`.
+
+### Cómo probar en Swagger
+1. Crea o localiza una transacción existente.
+2. Ejecuta `POST /api/risk-analysis/transactions/{id}`.
+3. El motor evaluará y te devolverá el `riskScore`, las reglas que se activaron (`triggeredRules`), y la recomendación oficial.
+4. Consulta `GET /api/transactions/{id}` para verificar que los datos fueron actualizados en la base de datos permanentemente.
+
 ## Base de Datos (PostgreSQL)
 Actualmente el proyecto utiliza el perfil `dev` por defecto. Este perfil **desactiva temporalmente** la autoconfiguración de la base de datos para permitir que el backend inicie correctamente de forma limpia y sin errores de conexión. La configuración de PostgreSQL está completamente preparada en el perfil `prod` y **se configurará y habilitará al 100% en el Módulo 3**, cuando comencemos a trabajar con las entidades y repositorios de datos.
 

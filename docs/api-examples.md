@@ -112,3 +112,41 @@
 * **Buscar por tipo:** `GET /api/transactions/type/TRANSFER`
 * **Buscar por canal:** `GET /api/transactions/channel/WEB`
 * **Resumen estadístico:** `GET /api/transactions/summary`
+
+---
+
+## Motor Antifraude y Análisis de Riesgo (Módulo 7)
+
+### Analizar transacción específica
+**POST /api/risk-analysis/transactions/1**
+*Requiere Header: `Authorization: Bearer <TOKEN>` (ADMIN o ANALYST)*
+
+**Respuesta Esperada:**
+```json
+{
+  "transactionId": 1,
+  "customerId": 1,
+  "customerFullName": "Juan Pérez",
+  "amount": 8500.00,
+  "transactionType": "TRANSFER",
+  "channel": "WEB",
+  "riskScore": 65,
+  "riskLevel": "HIGH",
+  "riskExplanation": "Monto elevado respecto a una operación regular. Operación realizada por canal digital. Origen y destino de la operación son diferentes. Las transferencias requieren mayor monitoreo.",
+  "triggeredRules": [
+    "HIGH_AMOUNT",
+    "DIGITAL_CHANNEL",
+    "DIFFERENT_LOCATION",
+    "TRANSFER_OPERATION"
+  ],
+  "recommendedAction": "Enviar operación a revisión manual por analista.",
+  "transactionStatus": "UNDER_REVIEW",
+  "analyzedAt": "2026-06-12T15:30:00.000000"
+}
+```
+
+### Analizar todas las pendientes
+**POST /api/risk-analysis/pending**
+
+### Listar reglas activas
+**GET /api/risk-analysis/rules**

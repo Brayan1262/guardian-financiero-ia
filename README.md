@@ -62,7 +62,8 @@ guardian-financiero-ia/
 * **Módulo 4:** seguridad con Spring Security, JWT y roles. (Completado)
 * **Módulo 5:** gestión de clientes. (Completado)
 * **Módulo 6:** gestión de transacciones financieras. (Completado)
-* **Módulo 7:** microservicio IA integrado.
+* **Módulo 7:** motor antifraude basado en reglas. (Completado)
+* **Módulo 8:** generación y gestión de alertas.
 
 ## Flujo general del sistema
 1. El cliente o sistema externo envía una transacción al backend (Spring Boot).
@@ -77,7 +78,7 @@ guardian-financiero-ia/
 La base de datos está completamente configurada. Al ejecutarse la aplicación, las entidades de JPA crearán y actualizarán el esquema automáticamente.
 
 ## Estado actual
-**Módulo 6:** Implementada gestión completa de transacciones financieras. Se añadió el CRUD y filtros (por cliente, estado, riesgo, tipo y canal), resúmenes automáticos y control estricto del estado del cliente (activo, bloqueado o en revisión) previo al análisis antifraude.
+**Módulo 7:** Implementado motor antifraude basado en reglas (RiskEngineService). El motor evalúa automáticamente las transacciones en base a múltiples criterios (montos altos, hora inusual, canales digitales, ubicaciones) para asignar un RiskLevel. Además, se generan alertas de fraude automáticamente en casos de riesgo HIGH o CRITICAL.
 
 ---
 **Autor:** Brayan Jair Chavez Oscor
