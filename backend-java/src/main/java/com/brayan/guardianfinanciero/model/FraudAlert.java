@@ -47,11 +47,9 @@ public class FraudAlert {
     private AlertStatus status = AlertStatus.PENDING;
 
     @NotBlank
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String reason;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String analystComment;
 

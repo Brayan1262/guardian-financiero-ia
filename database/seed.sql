@@ -62,6 +62,12 @@ LIMIT 1;
 INSERT INTO risk_rules (rule_code, name, description, score, active, created_at, updated_at)
 VALUES ('HIGH_AMOUNT', 'Monto inusual', 'Transacción supera el límite seguro', 30, true, NOW(), NOW());
 
+-- Nota (Módulo 8):
+-- Las alertas de fraude (tabla fraud_alerts) NO se inicializan masivamente por scripts SQL. 
+-- El sistema está diseñado para que FraudAnalysisService las genere de manera automática en tiempo 
+-- real cuando una transacción es analizada y resulta tener RiskLevel HIGH o CRITICAL.
+-- Puedes generar alertas probando el endpoint POST /api/risk-analysis/pending.
+
 INSERT INTO risk_rules (rule_code, name, description, score, active, created_at, updated_at)
 VALUES ('UNUSUAL_HOUR', 'Hora inusual', 'Transacción fuera del horario laboral', 20, true, NOW(), NOW());
 

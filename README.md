@@ -63,7 +63,8 @@ guardian-financiero-ia/
 * **Módulo 5:** gestión de clientes. (Completado)
 * **Módulo 6:** gestión de transacciones financieras. (Completado)
 * **Módulo 7:** motor antifraude basado en reglas. (Completado)
-* **Módulo 8:** generación y gestión de alertas.
+* **Módulo 8:** generación y gestión de alertas. (Completado)
+* **Módulo 9:** dashboard Angular.
 
 ## Flujo general del sistema
 1. El cliente o sistema externo envía una transacción al backend (Spring Boot).
@@ -78,7 +79,7 @@ guardian-financiero-ia/
 La base de datos está completamente configurada. Al ejecutarse la aplicación, las entidades de JPA crearán y actualizarán el esquema automáticamente.
 
 ## Estado actual
-**Módulo 7:** Implementado motor antifraude basado en reglas (RiskEngineService). El motor evalúa automáticamente las transacciones en base a múltiples criterios (montos altos, hora inusual, canales digitales, ubicaciones) para asignar un RiskLevel. Además, se generan alertas de fraude automáticamente en casos de riesgo HIGH o CRITICAL.
+**Módulo 8:** Implementada gestión de alertas de fraude (FraudAlertService). Los analistas pueden tomar alertas en revisión, confirmar fraudes o marcarlas como falsos positivos, lo cual rechaza o aprueba la transacción subyacente automáticamente. El motor está totalmente interconectado.
 
 ---
 **Autor:** Brayan Jair Chavez Oscor

@@ -67,7 +67,6 @@ public class FinancialTransaction {
     @Column(nullable = false)
     private RiskLevel riskLevel = RiskLevel.LOW;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String riskExplanation;
 

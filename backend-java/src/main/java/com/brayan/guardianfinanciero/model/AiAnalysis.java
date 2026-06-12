@@ -30,11 +30,9 @@ public class AiAnalysis {
     @Enumerated(EnumType.STRING)
     private RiskLevel predictedRiskLevel;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String explanation;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String recommendedAction;
 

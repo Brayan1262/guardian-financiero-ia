@@ -150,3 +150,43 @@
 
 ### Listar reglas activas
 **GET /api/risk-analysis/rules**
+
+---
+
+## Gestión de Alertas Antifraude (Módulo 8)
+
+### Listar alertas
+**GET /api/alerts**
+
+### Tomar alerta (In Review)
+**PATCH /api/alerts/1/take**
+*Requiere Header: `Authorization: Bearer <TOKEN>` (ADMIN o ANALYST)*
+
+### Marcar como Fraude Confirmado
+**PATCH /api/alerts/1/status**
+```json
+{
+  "status": "CONFIRMED_FRAUD",
+  "analystComment": "Se confirma operación sospechosa por monto elevado y canal digital."
+}
+```
+
+### Marcar como Falso Positivo
+**PATCH /api/alerts/1/status**
+```json
+{
+  "status": "FALSE_POSITIVE",
+  "analystComment": "Cliente confirmó la operación por llamada."
+}
+```
+
+### Agregar o actualizar comentario
+**PATCH /api/alerts/1/comment**
+```json
+{
+  "analystComment": "Se contactó al cliente para validación inicial. Esperando respuesta."
+}
+```
+
+### Resumen estadístico
+**GET /api/alerts/summary**

@@ -64,6 +64,8 @@ public class FraudAnalysisService {
         transaction = transactionRepository.save(transaction);
 
         // Create alert if HIGH or CRITICAL
+        boolean alertGenerated = false;
+        Long alertId = null;
         if (result.getRiskLevel() == RiskLevel.HIGH || result.getRiskLevel() == RiskLevel.CRITICAL) {
             Optional<FraudAlert> existingAlert = fraudAlertRepository.findByTransactionId(transaction.getId());
             if (existingAlert.isEmpty()) {
@@ -75,7 +77,12 @@ public class FraudAnalysisService {
                         .status(AlertStatus.PENDING)
                         .reason(result.getRiskExplanation())
                         .build();
-                fraudAlertRepository.save(alert);
+                alert = fraudAlertRepository.save(alert);
+                alertGenerated = true;
+                alertId = alert.getId();
+            } else {
+                alertGenerated = true;
+                alertId = existingAlert.get().getId();
             }
         }
 
@@ -93,6 +100,8 @@ public class FraudAnalysisService {
                 .recommendedAction(result.getRecommendedAction())
                 .transactionStatus(result.getTransactionStatus())
                 .analyzedAt(LocalDateTime.now())
+                .alertGenerated(alertGenerated)
+                .alertId(alertId)
                 .build();
     }
 }

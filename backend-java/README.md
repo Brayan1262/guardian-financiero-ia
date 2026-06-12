@@ -204,6 +204,41 @@ Motor interno que analiza las transacciones financieras en tiempo real y asigna 
 3. El motor evaluará y te devolverá el `riskScore`, las reglas que se activaron (`triggeredRules`), y la recomendación oficial.
 4. Consulta `GET /api/transactions/{id}` para verificar que los datos fueron actualizados en la base de datos permanentemente.
 
+---
+
+## Módulo 8 - Gestión de alertas antifraude
+
+Permite a los analistas revisar, comentar y resolver las alertas generadas automáticamente por el motor antifraude. Se integra fuertemente con el módulo de transacciones.
+
+### Estados disponibles para Alertas
+- `PENDING`: La alerta fue recién generada.
+- `IN_REVIEW`: Un analista la tomó bajo investigación.
+- `CONFIRMED_FRAUD`: Se confirmó el fraude. Rechaza la transacción.
+- `FALSE_POSITIVE`: Es una operación legítima. Aprueba la transacción.
+- `RESOLVED`: La alerta se cerró administrativamente.
+
+### Endpoints Protegidos por Rol
+- `GET /api/alerts`: Listar todas. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/alerts/transaction/{transactionId}`: Buscar alerta por transacción. (ADMIN, ANALYST, AUDITOR)
+- `PATCH /api/alerts/{id}/take`: Tomar la alerta, pasa a IN_REVIEW. (ADMIN, ANALYST)
+- `PATCH /api/alerts/{id}/status`: Actualizar estado (ej. CONFIRMED_FRAUD). (ADMIN, ANALYST)
+- `PATCH /api/alerts/{id}/comment`: Añadir comentario de investigación. (ADMIN, ANALYST)
+- `GET /api/alerts/summary`: Resumen estadístico. (ADMIN, ANALYST, AUDITOR)
+
+### Cómo probar en Swagger
+1. Login en `/api/auth/login` y autoriza Swagger con un usuario ADMIN o ANALYST.
+2. Genera una alerta ejecutando el motor (`POST /api/risk-analysis/pending`) o analizando una transacción riesgosa.
+3. Busca tu alerta en `GET /api/alerts`.
+4. Ejecuta `PATCH /api/alerts/1/take` para tomarla (registrará tu ID de usuario).
+5. Manda a `PATCH /api/alerts/1/status` el siguiente JSON:
+```json
+{
+  "status": "CONFIRMED_FRAUD",
+  "analystComment": "Cliente confirmó que le robaron la tarjeta."
+}
+```
+6. Revisa la transacción original en `GET /api/transactions/{id}` y verás que ahora su estado es `REJECTED`.
+
 ## Base de Datos (PostgreSQL)
 Actualmente el proyecto utiliza el perfil `dev` por defecto. Este perfil **desactiva temporalmente** la autoconfiguración de la base de datos para permitir que el backend inicie correctamente de forma limpia y sin errores de conexión. La configuración de PostgreSQL está completamente preparada en el perfil `prod` y **se configurará y habilitará al 100% en el Módulo 3**, cuando comencemos a trabajar con las entidades y repositorios de datos.
 

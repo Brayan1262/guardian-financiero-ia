@@ -33,7 +33,6 @@ public class AuditLog {
 
     private Long entityId;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String detail;
 
