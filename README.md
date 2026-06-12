@@ -59,7 +59,7 @@ guardian-financiero-ia/
 * **Módulo 1:** estructura base del monorepo. (Completado)
 * **Módulo 2:** backend Java Spring Boot base. (Completado)
 * **Módulo 3:** PostgreSQL y modelo de datos inicial. (Completado)
-* **Módulo 4:** seguridad, JWT y roles.
+* **Módulo 4:** seguridad con Spring Security, JWT y roles. (Completado)
 * **Módulo 5:** motor de reglas antifraude y analistas.
 * **Módulo 6:** frontend Angular base y UI dashboard.
 * **Módulo 7:** microservicio IA integrado.
@@ -67,9 +67,9 @@ guardian-financiero-ia/
 ## Flujo general del sistema
 1. El cliente o sistema externo envía una transacción al backend (Spring Boot).
 2. El backend guarda la transacción en PostgreSQL y solicita un análisis rápido mediante reglas predefinidas.
-3. El backend envía la transacción al microservicio de IA (FastAPI) para un análisis profundo basado en modelos.
-4. El servicio de IA devuelve un score de riesgo.
-5. Si el riesgo supera un umbral, el backend genera una alerta de fraude en la base de datos.
+3. El backend envía la transacción al microservicio IA para un análisis avanzado (opcional/asíncrono).
+4. El sistema evalúa el puntaje final; si supera el límite, crea una `FraudAlert`.
+5. Si es muy alto el riesgo, la transacción se marca como "UNDER_REVIEW" o se bloquea automáticamente.
 6. Los usuarios (ANALYST o AUDITOR) inician sesión en el frontend (Angular) para revisar el dashboard.
 7. Los analistas gestionan (aprueban, rechazan, investigan) las alertas desde la interfaz web.
 
@@ -77,7 +77,7 @@ guardian-financiero-ia/
 La base de datos está completamente configurada. Al ejecutarse la aplicación, las entidades de JPA crearán y actualizarán el esquema automáticamente.
 
 ## Estado actual
-**Módulo 3:** PostgreSQL configurado con modelo de datos inicial creado (entidades de dominio, repositorios JPA) y endpoint de verificación `/api/database/status` funcionando perfectamente.
+**Módulo 4:** Implementada seguridad profesional con Spring Security, JWT, BCrypt y roles (ADMIN, ANALYST, AUDITOR). Endpoints de autenticación habilitados y Swagger protegido con Bearer Token.
 
 ---
 **Autor:** Brayan Jair Chavez Oscor

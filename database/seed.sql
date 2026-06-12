@@ -4,15 +4,15 @@
 -- haya levantado por primera vez y creado las tablas automáticamente.
 -- ==========================================================
 
--- Usuarios demo (Contraseñas temporales en texto plano, cambiar por BCrypt después)
-INSERT INTO users (full_name, email, password, role, enabled, created_at, updated_at) 
-VALUES ('Admin Sistema', 'admin@finguard.com', 'admin123', 'ADMIN', true, NOW(), NOW());
-
-INSERT INTO users (full_name, email, password, role, enabled, created_at, updated_at) 
-VALUES ('Analista Prueba', 'analista@finguard.com', 'analista123', 'ANALYST', true, NOW(), NOW());
-
-INSERT INTO users (full_name, email, password, role, enabled, created_at, updated_at) 
-VALUES ('Auditor General', 'auditor@finguard.com', 'auditor123', 'AUDITOR', true, NOW(), NOW());
+-- ==========================================================
+-- IMPORTANTE: Para el Módulo 4 de Seguridad en adelante, los passwords 
+-- en la base de datos deben ser un hash generado por BCrypt.
+-- Es obligatorio crear a los usuarios usando el endpoint de registro de la API:
+-- POST /api/auth/register
+-- 
+-- Ejemplo de Body:
+-- { "fullName": "Admin", "email": "admin@guardian.com", "password": "admin123", "role": "ADMIN" }
+-- ==========================================================
 
 -- Clientes demo
 INSERT INTO customers (document_number, full_name, email, phone, status, risk_score, created_at, updated_at)

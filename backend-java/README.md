@@ -83,6 +83,36 @@ Una vez iniciado, Spring Boot creará las tablas automáticamente en tu base de 
 Luego, puedes verificar la conexión entrando a:
 - [http://localhost:8080/api/database/status](http://localhost:8080/api/database/status)
 
+---
+
+## Módulo 4 - Seguridad JWT y roles
+
+El sistema incluye autenticación JWT usando Spring Security y BCrypt.
+
+### Endpoints Públicos
+- `GET /`
+- `GET /api/health`
+- `GET /api/database/status`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- Documentación Swagger (`/swagger-ui/index.html`)
+
+### Endpoints Protegidos por Rol
+- `/api/admin/**`: Requiere rol `ADMIN`
+- `/api/analyst/**`: Requiere rol `ADMIN` o `ANALYST`
+- `/api/audit/**`: Requiere rol `ADMIN` o `AUDITOR`
+
+### Probar la seguridad
+
+1. **Registrar un usuario:** 
+   Ve al endpoint `POST /api/auth/register` y crea tu usuario (ej. rol `ADMIN`).
+2. **Iniciar sesión:** 
+   Usa `POST /api/auth/login` para obtener tu `token` JWT.
+3. **Autorizar Swagger:** 
+   Copia el `token` devuelto (sin la palabra Bearer), haz clic en el botón verde **Authorize** en la parte superior derecha de Swagger y pégalo allí.
+4. **Probar endpoints:** 
+   Ahora puedes ejecutar libremente los endpoints como `GET /api/auth/me` o `GET /api/admin/test` desde Swagger, y la autorización se enviará automáticamente.
+
 ## Base de Datos (PostgreSQL)
 Actualmente el proyecto utiliza el perfil `dev` por defecto. Este perfil **desactiva temporalmente** la autoconfiguración de la base de datos para permitir que el backend inicie correctamente de forma limpia y sin errores de conexión. La configuración de PostgreSQL está completamente preparada en el perfil `prod` y **se configurará y habilitará al 100% en el Módulo 3**, cuando comencemos a trabajar con las entidades y repositorios de datos.
 
