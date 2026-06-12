@@ -55,6 +55,15 @@ guardian-financiero-ia/
 └── docker-compose.yml
 ```
 
+## Planificación y Módulos
+* **Módulo 1:** estructura base del monorepo. (Completado)
+* **Módulo 2:** backend Java Spring Boot base. (Completado)
+* **Módulo 3:** PostgreSQL y modelo de datos inicial. (Completado)
+* **Módulo 4:** seguridad, JWT y roles.
+* **Módulo 5:** motor de reglas antifraude y analistas.
+* **Módulo 6:** frontend Angular base y UI dashboard.
+* **Módulo 7:** microservicio IA integrado.
+
 ## Flujo general del sistema
 1. El cliente o sistema externo envía una transacción al backend (Spring Boot).
 2. El backend guarda la transacción en PostgreSQL y solicita un análisis rápido mediante reglas predefinidas.
@@ -64,8 +73,11 @@ guardian-financiero-ia/
 6. Los usuarios (ANALYST o AUDITOR) inician sesión en el frontend (Angular) para revisar el dashboard.
 7. Los analistas gestionan (aprueban, rechazan, investigan) las alertas desde la interfaz web.
 
+## Base de Datos (PostgreSQL)
+La base de datos está completamente configurada. Al ejecutarse la aplicación, las entidades de JPA crearán y actualizarán el esquema automáticamente.
+
 ## Estado actual
-**Módulo 2:** Backend Java Spring Boot base creado (estructura, Swagger, manejo de errores, DB config).
+**Módulo 3:** PostgreSQL configurado con modelo de datos inicial creado (entidades de dominio, repositorios JPA) y endpoint de verificación `/api/database/status` funcionando perfectamente.
 
 ---
 **Autor:** Brayan Jair Chavez Oscor

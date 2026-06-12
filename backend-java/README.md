@@ -44,11 +44,44 @@ Si al ejecutar te aparece el error `JAVA_HOME not found in your environment`, po
 
 ## Endpoints disponibles (Base)
 - `GET /` : Endpoint principal, devuelve información de la aplicación.
-- `GET /api/health` : Endpoint de salud, verifica el estado del backend.
+- `GET /api/health` : Health check del microservicio.
+- `GET /api/database/status` : Verificar estado de conexión con PostgreSQL.
 
 ## Swagger / OpenAPI
 La documentación interactiva de la API está disponible en:
 [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+---
+
+## Módulo 3 - PostgreSQL y modelo de datos inicial
+
+### 1. Base de datos manual
+Para ejecutar este módulo con éxito, primero asegúrate de crear la base de datos en tu PostgreSQL usando pgAdmin o psql:
+```sql
+CREATE DATABASE guardian_financiero_db;
+```
+
+### 2. Variables de entorno
+Renombra o copia el archivo `.env.example` a `.env` en la raíz de `backend-java` y ajusta tus credenciales si no usas las de por defecto:
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=guardian_financiero_db
+DB_USER=postgres
+DB_PASSWORD=admin
+SERVER_PORT=8080
+```
+
+### 3. Ejecutar y probar
+Ejecuta el backend en tu terminal Windows usando el script preparado:
+```cmd
+.\run-backend.bat
+```
+*(O tradicionalmente: `.\mvnw.cmd spring-boot:run`)*
+
+Una vez iniciado, Spring Boot creará las tablas automáticamente en tu base de datos gracias a JPA/Hibernate. 
+Luego, puedes verificar la conexión entrando a:
+- [http://localhost:8080/api/database/status](http://localhost:8080/api/database/status)
 
 ## Base de Datos (PostgreSQL)
 Actualmente el proyecto utiliza el perfil `dev` por defecto. Este perfil **desactiva temporalmente** la autoconfiguración de la base de datos para permitir que el backend inicie correctamente de forma limpia y sin errores de conexión. La configuración de PostgreSQL está completamente preparada en el perfil `prod` y **se configurará y habilitará al 100% en el Módulo 3**, cuando comencemos a trabajar con las entidades y repositorios de datos.

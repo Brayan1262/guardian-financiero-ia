@@ -10,10 +10,19 @@ El núcleo del sistema estará desarrollado en Java 21 utilizando el framework S
 ### 2. Frontend (Angular)
 La interfaz de usuario será una Single Page Application (SPA) construida con Angular, TypeScript y Angular Material. Consumirá la API del backend para ofrecer interfaces de registro, gestión de clientes, visualización de transacciones, dashboard de métricas y gestión de alertas.
 
-### 3. Microservicio de IA (FastAPI)
-Un servicio independiente desarrollado en Python utilizando FastAPI. Estará dedicado exclusivamente al análisis de riesgo usando modelos de Machine Learning (como Scikit-learn). Recibirá datos de transacciones desde el backend Java y devolverá un score de riesgo.
+### 3. Microservicio IA (Python)
+(Planeado) Microservicio con modelo de Machine Learning que recibirá datos de transacciones del backend Java, analizará patrones anómalos y devolverá una puntuación y clasificación de riesgo.
 
 ### 4. Base de Datos (PostgreSQL)
+Modelo de datos relacional inicial que soporta el sistema:
+- **Customer** tiene muchas **FinancialTransaction**.
+- **FinancialTransaction** puede tener una **FraudAlert** (1 a 1).
+- **FinancialTransaction** puede tener un análisis de IA (**AiAnalysis**).
+- **FraudAlert** pertenece a un **Customer**.
+- **FraudAlert** puede ser revisada y gestionada por un analista/auditor (**AppUser**).
+- **AuditLog** registra las acciones y puede estar asociado a un **AppUser**.
+
+### 5. Base de Datos (PostgreSQL)
 El almacenamiento persistente y relacional estará gestionado por PostgreSQL. Guardará toda la información estructurada, incluyendo usuarios, transacciones, alertas y logs de auditoría.
 
 ## Comunicación entre Componentes

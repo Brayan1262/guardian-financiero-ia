@@ -1,14 +1,15 @@
 -- init.sql
--- Plantilla de inicialización de la base de datos para Guardián Financiero IA
+-- =========================================================================
+-- IMPORTANTE: PostgreSQL no permite ejecutar 'CREATE DATABASE' fácilmente
+-- dentro de una misma conexión si la base de datos ya está en uso o si 
+-- el script se corre dentro de una transacción.
+--
+-- Para crear la base de datos por primera vez, conéctate a 'postgres' y ejecuta:
+-- CREATE DATABASE guardian_financiero_db;
+--
+-- Si la base de datos guardian_financiero_db ya existe, ignora la línea anterior.
+-- =========================================================================
 
--- Aquí se crearán las tablas principales:
--- * users (usuarios del sistema)
--- * roles (roles del sistema como ADMIN, ANALYST, AUDITOR)
--- * customers (clientes registrados)
--- * transactions (registro de transacciones financieras)
--- * fraud_alerts (alertas generadas por riesgo de fraude)
--- * risk_rules (reglas estáticas del motor antifraude)
--- * audit_logs (registro de acciones realizadas en el sistema)
--- * ai_analysis (resultados detallados del microservicio de IA)
-
--- CREATE TABLE IF NOT EXISTS users ( ... );
+-- Las tablas (users, customers, transactions, fraud_alerts, risk_rules,
+-- audit_logs, ai_analysis) se generarán automáticamente gracias a Spring Boot
+-- y la propiedad spring.jpa.hibernate.ddl-auto=update.
