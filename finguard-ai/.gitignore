@@ -1,0 +1,50 @@
+# IDEs / Editores
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+
+# Java / Maven / Spring Boot
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/
+!mvnw
+!mvnw.cmd
+
+# Node.js / Angular
+node_modules/
+dist/
+tmp/
+out-tsc/
+.angular/
+npm-debug.log
+yarn-error.log
+
+# Python / FastAPI / IA
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env/
+.venv/
+pip-log.txt
+
+# Docker
+.docker/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# SO
+.DS_Store
+Thumbs.db

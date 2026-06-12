@@ -1,0 +1,25 @@
+# Plantilla inicial - docker-compose.yml
+# Los servicios se implementarán y activarán en los módulos posteriores.
+
+version: '3.8'
+
+services:
+  # Base de datos principal
+  # postgres-db:
+  #   image: postgres:15
+  #   ...
+
+  # Backend en Java Spring Boot
+  # backend-java:
+  #   build: ./backend-java
+  #   ...
+
+  # Frontend en Angular
+  # frontend-angular:
+  #   build: ./frontend-angular
+  #   ...
+
+  # Microservicio de IA en Python FastAPI
+  # ai-service:
+  #   build: ./ai-service
+  #   ...
