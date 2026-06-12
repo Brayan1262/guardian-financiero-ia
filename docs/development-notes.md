@@ -7,7 +7,7 @@ El proyecto se desarrollará de forma progresiva, dividiendo el trabajo en los s
 * **Módulo 3:** Configuración PostgreSQL, entidades (AppUser, Customer, FinancialTransaction, FraudAlert, RiskRule, AuditLog, AiAnalysis), enums, repositorios y endpoint de verificación DB. (COMPLETADO)
 * **Módulo 4:** Autenticación y Autorización con Spring Security, JWT, BCrypt, protección de rutas mediante filtros, manejo de roles y Swagger configurado con Bearer Token. (COMPLETADO)
 * **Módulo 5:** CustomerController, CustomerService, DTOs, mapper manual, validaciones y seguridad de endpoints por roles (@PreAuthorize). Búsquedas y filtros añadidos. (COMPLETADO)
-* **Módulo 6:** gestión de transacciones.
+* **Módulo 6:** TransactionController, TransactionService, validaciones de reglas de negocio según CustomerStatus, queries avanzados en Repository y resumen de transacciones. (COMPLETADO)
 * **Módulo 7:** motor antifraude basado en reglas.
 * **Módulo 8:** generación y gestión de alertas.
 * **Módulo 9:** dashboard Angular.

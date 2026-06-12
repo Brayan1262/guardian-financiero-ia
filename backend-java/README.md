@@ -143,6 +143,42 @@ Este módulo permite administrar los clientes que realizarán transacciones.
 }
 ```
 
+---
+
+## Módulo 6 - Gestión de transacciones financieras
+
+Prepara las transacciones antes de que pasen por el motor antifraude. Aplica reglas de validación en base al estado del cliente (por ejemplo, rechaza transacciones si el cliente está `BLOCKED`).
+
+### Endpoints Protegidos por Rol
+- `POST /api/transactions`: Crear transacción. (ADMIN, ANALYST)
+- `GET /api/transactions`: Listar todas. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/{id}`: Buscar por ID. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/customer/{customerId}`: Transacciones de un cliente. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/status/{status}`: Filtro por estado. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/risk/{riskLevel}`: Filtro por riesgo. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/type/{type}`: Filtro por tipo. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/channel/{channel}`: Filtro por canal. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/date-range`: Filtro por fechas. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/transactions/summary`: Resumen estadístico. (ADMIN, ANALYST, AUDITOR)
+- `PATCH /api/transactions/{id}/status`: Cambiar estado manualmente. (ADMIN, ANALYST)
+
+### Cómo probar en Swagger
+1. Login en `/api/auth/login` y autoriza Swagger.
+2. Crea un cliente en `customer-controller` y anota su `id`.
+3. Crea la transacción enviando en `POST /api/transactions`:
+```json
+{
+  "customerId": 1,
+  "amount": 8500.00,
+  "transactionType": "TRANSFER",
+  "channel": "WEB",
+  "originLocation": "Lima",
+  "destinationLocation": "Cusco",
+  "deviceId": "WEB-DEVICE-001",
+  "transactionDateTime": "2026-06-12T14:30:00"
+}
+```
+
 ## Base de Datos (PostgreSQL)
 Actualmente el proyecto utiliza el perfil `dev` por defecto. Este perfil **desactiva temporalmente** la autoconfiguración de la base de datos para permitir que el backend inicie correctamente de forma limpia y sin errores de conexión. La configuración de PostgreSQL está completamente preparada en el perfil `prod` y **se configurará y habilitará al 100% en el Módulo 3**, cuando comencemos a trabajar con las entidades y repositorios de datos.
 

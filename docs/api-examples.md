@@ -77,3 +77,38 @@
   "status": "UNDER_REVIEW"
 }
 ```
+
+---
+
+## Transacciones Financieras (Módulo 6)
+
+### Crear transacción
+**POST /api/transactions**
+*Requiere Header: `Authorization: Bearer <TOKEN>` (ADMIN o ANALYST)*
+```json
+{
+  "customerId": 1,
+  "amount": 8500.00,
+  "transactionType": "TRANSFER",
+  "channel": "WEB",
+  "originLocation": "Lima",
+  "destinationLocation": "Cusco",
+  "deviceId": "WEB-DEVICE-001",
+  "transactionDateTime": "2026-06-12T14:30:00"
+}
+```
+
+### Actualizar estado
+**PATCH /api/transactions/{id}/status**
+*Requiere Header: `Authorization: Bearer <TOKEN>` (ADMIN o ANALYST)*
+```json
+{
+  "status": "UNDER_REVIEW"
+}
+```
+
+### Búsquedas Comunes
+* **Buscar por estado:** `GET /api/transactions/status/PENDING`
+* **Buscar por tipo:** `GET /api/transactions/type/TRANSFER`
+* **Buscar por canal:** `GET /api/transactions/channel/WEB`
+* **Resumen estadístico:** `GET /api/transactions/summary`

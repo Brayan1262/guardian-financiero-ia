@@ -61,7 +61,7 @@ guardian-financiero-ia/
 * **Módulo 3:** PostgreSQL y modelo de datos inicial. (Completado)
 * **Módulo 4:** seguridad con Spring Security, JWT y roles. (Completado)
 * **Módulo 5:** gestión de clientes. (Completado)
-* **Módulo 6:** frontend Angular base y UI dashboard.
+* **Módulo 6:** gestión de transacciones financieras. (Completado)
 * **Módulo 7:** microservicio IA integrado.
 
 ## Flujo general del sistema
@@ -77,7 +77,7 @@ guardian-financiero-ia/
 La base de datos está completamente configurada. Al ejecutarse la aplicación, las entidades de JPA crearán y actualizarán el esquema automáticamente.
 
 ## Estado actual
-**Módulo 5:** Implementada gestión completa de clientes (CRUD, búsqueda, filtros y cambio de estado) usando DTOs, validaciones, mapeos manuales y seguridad por roles.
+**Módulo 6:** Implementada gestión completa de transacciones financieras. Se añadió el CRUD y filtros (por cliente, estado, riesgo, tipo y canal), resúmenes automáticos y control estricto del estado del cliente (activo, bloqueado o en revisión) previo al análisis antifraude.
 
 ---
 **Autor:** Brayan Jair Chavez Oscor
