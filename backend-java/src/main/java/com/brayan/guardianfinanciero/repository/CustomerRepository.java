@@ -13,4 +13,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByDocumentNumber(String documentNumber);
     boolean existsByDocumentNumber(String documentNumber);
     List<Customer> findByStatus(CustomerStatus status);
+    List<Customer> findByFullNameContainingIgnoreCase(String fullName);
 }

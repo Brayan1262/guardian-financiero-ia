@@ -113,6 +113,36 @@ El sistema incluye autenticación JWT usando Spring Security y BCrypt.
 4. **Probar endpoints:** 
    Ahora puedes ejecutar libremente los endpoints como `GET /api/auth/me` o `GET /api/admin/test` desde Swagger, y la autorización se enviará automáticamente.
 
+---
+
+## Módulo 5 - Gestión de clientes
+
+Este módulo permite administrar los clientes que realizarán transacciones.
+
+### Endpoints Protegidos por Rol
+- `POST /api/customers`: Crear cliente. (ADMIN, ANALYST)
+- `GET /api/customers`: Listar todos. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/customers/{id}`: Buscar por ID. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/customers/document/{documentNumber}`: Buscar por DNI. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/customers/status/{status}`: Buscar por estado. (ADMIN, ANALYST, AUDITOR)
+- `GET /api/customers/search?name={texto}`: Búsqueda por nombre. (ADMIN, ANALYST, AUDITOR)
+- `PUT /api/customers/{id}`: Actualizar cliente. (ADMIN, ANALYST)
+- `PATCH /api/customers/{id}/status`: Cambiar estado. (ADMIN, ANALYST)
+- `DELETE /api/customers/{id}`: Eliminar cliente. (ADMIN)
+
+### Cómo probar en Swagger
+1. Genera y autoriza tu token JWT como se explica en el Módulo 4.
+2. Ve a la sección `customer-controller`.
+3. Para crear, usa `POST /api/customers` con el siguiente body:
+```json
+{
+  "documentNumber": "74859612",
+  "fullName": "Juan Pérez",
+  "email": "juan.perez@email.com",
+  "phone": "987654321"
+}
+```
+
 ## Base de Datos (PostgreSQL)
 Actualmente el proyecto utiliza el perfil `dev` por defecto. Este perfil **desactiva temporalmente** la autoconfiguración de la base de datos para permitir que el backend inicie correctamente de forma limpia y sin errores de conexión. La configuración de PostgreSQL está completamente preparada en el perfil `prod` y **se configurará y habilitará al 100% en el Módulo 3**, cuando comencemos a trabajar con las entidades y repositorios de datos.
 

@@ -60,7 +60,7 @@ guardian-financiero-ia/
 * **Módulo 2:** backend Java Spring Boot base. (Completado)
 * **Módulo 3:** PostgreSQL y modelo de datos inicial. (Completado)
 * **Módulo 4:** seguridad con Spring Security, JWT y roles. (Completado)
-* **Módulo 5:** motor de reglas antifraude y analistas.
+* **Módulo 5:** gestión de clientes. (Completado)
 * **Módulo 6:** frontend Angular base y UI dashboard.
 * **Módulo 7:** microservicio IA integrado.
 
@@ -77,7 +77,7 @@ guardian-financiero-ia/
 La base de datos está completamente configurada. Al ejecutarse la aplicación, las entidades de JPA crearán y actualizarán el esquema automáticamente.
 
 ## Estado actual
-**Módulo 4:** Implementada seguridad profesional con Spring Security, JWT, BCrypt y roles (ADMIN, ANALYST, AUDITOR). Endpoints de autenticación habilitados y Swagger protegido con Bearer Token.
+**Módulo 5:** Implementada gestión completa de clientes (CRUD, búsqueda, filtros y cambio de estado) usando DTOs, validaciones, mapeos manuales y seguridad por roles.
 
 ---
 **Autor:** Brayan Jair Chavez Oscor

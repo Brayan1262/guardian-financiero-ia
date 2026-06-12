@@ -16,13 +16,16 @@
 
 -- Clientes demo
 INSERT INTO customers (document_number, full_name, email, phone, status, risk_score, created_at, updated_at)
-VALUES ('10000001', 'Juan Perez', 'juan@test.com', '+12345678', 'ACTIVE', 0, NOW(), NOW());
+VALUES ('74859612', 'Juan Pérez', 'juan.perez@email.com', '987654321', 'ACTIVE', 0, NOW(), NOW())
+ON CONFLICT (document_number) DO NOTHING;
 
 INSERT INTO customers (document_number, full_name, email, phone, status, risk_score, created_at, updated_at)
-VALUES ('10000002', 'Maria Lopez', 'maria@test.com', '+87654321', 'UNDER_REVIEW', 50, NOW(), NOW());
+VALUES ('70854123', 'María López', 'maria.lopez@email.com', '999888777', 'UNDER_REVIEW', 50, NOW(), NOW())
+ON CONFLICT (document_number) DO NOTHING;
 
 INSERT INTO customers (document_number, full_name, email, phone, status, risk_score, created_at, updated_at)
-VALUES ('10000003', 'Carlos Fraud', 'carlos@test.com', '+00000000', 'BLOCKED', 100, NOW(), NOW());
+VALUES ('45987631', 'Carlos Ramírez', 'carlos.ramirez@email.com', '111222333', 'BLOCKED', 95, NOW(), NOW())
+ON CONFLICT (document_number) DO NOTHING;
 
 -- Reglas de riesgo demo
 INSERT INTO risk_rules (rule_code, name, description, score, active, created_at, updated_at)
