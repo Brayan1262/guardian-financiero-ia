@@ -1,37 +1,55 @@
-<div class="sidebar d-flex flex-column bg-dark text-white shadow">
-  <div class="sidebar-brand d-flex align-items-center p-4 border-bottom border-secondary">
-    <div class="logo-circle bg-primary text-white d-flex align-items-center justify-content-center rounded-circle me-3 flex-shrink-0">
-      <i class="bi bi-shield-lock-fill fs-5"></i>
+<div class="sidebar d-flex flex-column shadow-lg">
+  <div class="sidebar-brand d-flex align-items-center p-4">
+    <div class="logo-circle d-flex align-items-center justify-content-center rounded-3 me-3 shadow-sm">
+      <i class="bi bi-shield-check fs-4 text-white"></i>
     </div>
-    <span class="fs-5 fw-bold text-nowrap">Guardián IA</span>
+    <span class="fs-5 fw-bold text-white tracking-wide">Guardián IA</span>
   </div>
 
-  <div class="sidebar-menu flex-grow-1 p-3">
-    <ul class="nav nav-pills flex-column gap-2">
+  <div class="sidebar-menu flex-grow-1 px-3 py-2 mt-2">
+    <ul class="nav flex-column gap-2">
       <li class="nav-item">
-        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link text-white d-flex align-items-center rounded-3">
+        <a routerLink="/dashboard" routerLinkActive="active-link" class="nav-link d-flex align-items-center rounded-3">
           <i class="bi bi-grid-1x2-fill me-3 fs-5"></i>
-          Dashboard
+          <span class="fw-medium">Dashboard</span>
         </a>
       </li>
       <li class="nav-item">
-        <a routerLink="/transactions" routerLinkActive="active" class="nav-link text-white d-flex align-items-center rounded-3">
-          <i class="bi bi-currency-exchange me-3 fs-5"></i>
-          Transacciones
+        <a routerLink="/transactions" routerLinkActive="active-link" class="nav-link d-flex align-items-center rounded-3">
+          <i class="bi bi-arrow-left-right me-3 fs-5"></i>
+          <span class="fw-medium">Transacciones</span>
         </a>
       </li>
       <li class="nav-item">
-        <a routerLink="/alerts" routerLinkActive="active" class="nav-link text-white d-flex align-items-center rounded-3">
+        <a routerLink="/alerts" routerLinkActive="active-link" class="nav-link d-flex align-items-center rounded-3">
           <i class="bi bi-bell-fill me-3 fs-5"></i>
-          Alertas
+          <span class="fw-medium">Alertas</span>
         </a>
       </li>
       <li class="nav-item">
-        <a routerLink="/customers" routerLinkActive="active" class="nav-link text-white d-flex align-items-center rounded-3">
+        <a routerLink="/customers" routerLinkActive="active-link" class="nav-link d-flex align-items-center rounded-3">
           <i class="bi bi-people-fill me-3 fs-5"></i>
-          Clientes
+          <span class="fw-medium">Clientes</span>
         </a>
       </li>
     </ul>
+
+    <hr class="border-secondary opacity-25 my-4 mx-2">
+
+    <ul class="nav flex-column gap-2">
+      <li class="nav-item">
+        <a routerLink="/profile" routerLinkActive="active-link" class="nav-link d-flex align-items-center rounded-3">
+          <i class="bi bi-person-badge-fill me-3 fs-5"></i>
+          <span class="fw-medium">Mi Perfil</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-footer p-4">
+    <div class="glass-panel-dark rounded-4 p-3 text-center">
+      <small class="text-white-50 fw-semibold d-block mb-1">Guardián Financiero</small>
+      <small class="text-primary-light fw-bold" style="font-size: 0.7rem;">V 1.0.0 PRO</small>
+    </div>
   </div>
 </div>

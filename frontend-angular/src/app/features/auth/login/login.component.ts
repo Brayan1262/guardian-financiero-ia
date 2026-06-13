@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -11,10 +11,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+
+  phrases = [
+    'Protege tu sistema',
+    'Analítica en tiempo real',
+    'Seguridad financiera'
+  ];
+  currentPhrase = this.phrases[0];
+  phraseInterval: any;
 
   constructor(
     private fb: FormBuilder,
@@ -25,6 +33,20 @@ export class LoginComponent {
       email: ['admin@guardian.com', [Validators.required, Validators.email]],
       password: ['admin123', Validators.required]
     });
+  }
+
+  ngOnInit(): void {
+    let index = 0;
+    this.phraseInterval = setInterval(() => {
+      index = (index + 1) % this.phrases.length;
+      this.currentPhrase = this.phrases[index];
+    }, 4000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.phraseInterval) {
+      clearInterval(this.phraseInterval);
+    }
   }
 
   onSubmit(): void {
@@ -42,7 +64,11 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Credenciales incorrectas o error de conexión.';
+        if (err.status === 401 || err.status === 403) {
+          this.errorMessage = 'Credenciales incorrectas';
+        } else {
+          this.errorMessage = err.error?.message || 'Error de conexión con el servidor.';
+        }
       }
     });
   }

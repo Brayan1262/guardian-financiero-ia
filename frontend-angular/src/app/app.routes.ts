@@ -7,6 +7,8 @@ import { TransactionsComponent } from './features/transactions/transactions.comp
 import { AlertsComponent } from './features/alerts/alerts.component';
 import { CustomersComponent } from './features/customers/customers.component';
 
+import { ProfileComponent } from './features/profile/profile.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -18,7 +20,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'transactions', component: TransactionsComponent },
       { path: 'alerts', component: AlertsComponent },
-      { path: 'customers', component: CustomersComponent }
+      { path: 'customers', component: CustomersComponent },
+      { path: 'profile', component: ProfileComponent }
     ]
   },
   { path: '**', redirectTo: '' }

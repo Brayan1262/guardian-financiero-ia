@@ -8,7 +8,7 @@ import { DashboardOverview, DashboardSummary, MetricCard, DashboardCharts, Recen
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = `${environment.apiUrl}/dashboard`;
+  private apiUrl = 'http://localhost:8080/api/dashboard';
 
   constructor(private http: HttpClient) {}
 

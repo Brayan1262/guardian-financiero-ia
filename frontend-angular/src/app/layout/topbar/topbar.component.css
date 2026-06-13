@@ -1,4 +1,54 @@
-/* topbar styles */
 .navbar {
-  z-index: 10;
+  border-bottom: 1px solid var(--border-color) !important;
+  background-color: var(--bg-card) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dropdown-toggle-hide::after {
+  display: none;
+}
+
+.profile-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid transparent !important;
+}
+
+.profile-btn:hover, .dropdown.show .profile-btn {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+.animate-dropdown {
+  animation: dropIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top right;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.dropdown-item {
+  transition: background-color 0.2s ease;
+  color: var(--text-main);
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-main);
+}
+.dropdown-menu {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+.dropdown-menu .bg-light {
+  background-color: var(--bg-main) !important;
 }

@@ -1,44 +1,70 @@
-<div class="login-wrapper d-flex align-items-center justify-content-center">
-  <div class="login-card card shadow-lg border-0 rounded-4">
-    <div class="card-body p-5">
-      <div class="text-center mb-4">
-        <div class="logo-circle bg-primary text-white d-inline-flex align-items-center justify-content-center rounded-circle mb-3 shadow-sm">
-          <i class="bi bi-shield-lock-fill fs-2"></i>
-        </div>
-        <h2 class="fw-bold text-dark mb-1">Guardián Financiero IA</h2>
-        <p class="text-muted">Plataforma inteligente antifraude</p>
-      </div>
+<div class="login-wrapper position-relative overflow-hidden d-flex align-items-center justify-content-center">
+  <!-- Burbujas animadas -->
+  <ul class="bg-bubbles">
+    <li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li>
+  </ul>
 
-      <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center mb-4 rounded-3" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        <div>{{ errorMessage }}</div>
-      </div>
+  <!-- Contenedor Principal -->
+  <div class="container position-relative z-3">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+        
+        <div class="login-card glass-panel-dark rounded-4 shadow-lg border-0 overflow-hidden">
+          
+          <div class="card-body p-5">
+            <!-- Logo y Título -->
+            <div class="text-center mb-4">
+              <div class="logo-circle d-inline-flex align-items-center justify-content-center rounded-3 mb-3 shadow-sm" style="width: 56px; height: 56px;">
+                <i class="bi bi-shield-lock-fill fs-2 text-white"></i>
+              </div>
+              <h3 class="fw-bold text-white mb-1 tracking-wide">Guardián Financiero IA</h3>
+              <p class="text-primary-light small mb-0">Plataforma inteligente antifraude</p>
+            </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="mb-4">
-          <label for="email" class="form-label text-secondary fw-semibold">Correo Electrónico</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
-            <input type="email" id="email" class="form-control border-start-0 ps-0 bg-light focus-none" formControlName="email" placeholder="admin@guardian.com">
+            <!-- Frase dinámica -->
+            <div class="phrase-container text-center mb-4">
+              <p class="text-white-50 fst-italic phrase-fade-in">"{{ currentPhrase }}"</p>
+            </div>
+
+            <!-- Error -->
+            <div *ngIf="errorMessage" class="alert alert-danger border-0 bg-danger text-white bg-opacity-75 d-flex align-items-center mb-4 rounded-3" role="alert" style="backdrop-filter: blur(4px);">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <div class="small fw-medium">{{ errorMessage }}</div>
+            </div>
+
+            <!-- Formulario -->
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="mb-4 form-floating-custom">
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-secondary text-secondary"><i class="bi bi-envelope"></i></span>
+                  <input type="email" id="email" class="form-control bg-transparent border-secondary text-white focus-none" formControlName="email" placeholder="Correo Electrónico">
+                </div>
+              </div>
+
+              <div class="mb-4 form-floating-custom">
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-secondary text-secondary"><i class="bi bi-key"></i></span>
+                  <input type="password" id="password" class="form-control bg-transparent border-secondary text-white focus-none" formControlName="password" placeholder="Contraseña">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 py-3 mt-2 fs-6 fw-bold rounded-3 d-flex justify-content-center align-items-center gap-2 shadow-sm btn-animate border-0" [disabled]="loginForm.invalid || isLoading" style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                {{ isLoading ? 'Autenticando...' : 'Ingresar al Panel' }}
+              </button>
+            </form>
+
+            <!-- Demo Info -->
+            <div class="text-center mt-4">
+              <div class="glass-panel rounded-3 p-2 d-inline-block border-0 bg-white bg-opacity-10">
+                <small class="text-white-50"><i class="bi bi-info-circle me-1"></i>Demo: admin&#64;guardian.com / admin123</small>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <div class="mb-4">
-          <label for="password" class="form-label text-secondary fw-semibold">Contraseña</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
-            <input type="password" id="password" class="form-control border-start-0 ps-0 bg-light focus-none" formControlName="password" placeholder="admin123">
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100 py-2 fs-5 fw-semibold rounded-3 mb-3 d-flex justify-content-center align-items-center gap-2 shadow-sm" [disabled]="loginForm.invalid || isLoading">
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          {{ isLoading ? 'Ingresando...' : 'Iniciar Sesión' }}
-        </button>
-      </form>
-
-      <div class="text-center mt-3">
-        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Credenciales demo: admin&#64;guardian.com / admin123</small>
       </div>
     </div>
   </div>

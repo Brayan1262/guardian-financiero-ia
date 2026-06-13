@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { DashboardOverview } from '../../core/models/dashboard.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,29 +11,55 @@ import { DashboardOverview } from '../../core/models/dashboard.model';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   overview: DashboardOverview | null = null;
   isLoading = true;
+  hasError = false;
+  errorMessage = '';
 
   // Datos para barras HTML
   txStatusBars: { label: string, value: number, percent: number, colorClass: string }[] = [];
   txRiskBars: { label: string, value: number, percent: number, colorClass: string }[] = [];
   alertsRiskBars: { label: string, value: number, percent: number, colorClass: string }[] = [];
 
+  currentTime: Date = new Date();
+  private timeInterval: any;
+
   constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
-    this.dashboardService.getOverview().subscribe({
+    this.timeInterval = setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
+
+    forkJoin({
+      overview: this.dashboardService.getOverview(),
+      recentTx: this.dashboardService.getRecentTransactions(),
+      recentAlerts: this.dashboardService.getRecentAlerts()
+    }).subscribe({
       next: (data) => {
-        this.overview = data;
+        this.overview = data.overview;
+        // Sobreescribir las listas con los endpoints directos como se pidió
+        if (data.recentTx) this.overview.recentTransactions = data.recentTx;
+        if (data.recentAlerts) this.overview.recentAlerts = data.recentAlerts;
+        
         this.setupBars();
         this.isLoading = false;
+        this.hasError = false;
       },
       error: (err) => {
-        console.error('Error fetching dashboard overview', err);
+        console.error('Error fetching dashboard data', err);
         this.isLoading = false;
+        this.hasError = true;
+        this.errorMessage = 'Error al cargar datos. Verifica la conexión con el servidor.';
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
   }
 
   private setupBars(): void {

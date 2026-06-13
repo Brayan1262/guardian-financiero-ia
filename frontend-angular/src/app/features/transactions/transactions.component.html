@@ -1,0 +1,255 @@
+<div class="container-fluid py-4 animate-fade-in">
+  
+  <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center shadow-sm border-0 mb-4 animate-fade-in" role="alert">
+    <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+    <div class="fw-medium">{{ successMessage }}</div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold text-dark mb-1">Gestión de Transacciones</h3>
+      <p class="text-secondary mb-0">Explora, filtra y analiza las transacciones financieras.</p>
+    </div>
+    <div>
+      <button class="btn btn-primary shadow-sm rounded-pill px-4 fw-semibold btn-animate me-2" data-bs-toggle="modal" data-bs-target="#createTxModal">
+        <i class="bi bi-plus-lg me-2"></i>Nueva Transacción
+      </button>
+      <button class="btn btn-light shadow-sm rounded-pill px-4 text-primary fw-semibold btn-animate" (click)="loadTransactions()">
+        <i class="bi bi-arrow-clockwise me-2"></i>Actualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-4">
+      <div class="row g-3">
+        <div class="col-12 col-md-4">
+          <label class="form-label text-muted small fw-bold">Buscar Transacción</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" class="form-control bg-light border-start-0" placeholder="ID, Cliente o Canal..." [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="form-label text-muted small fw-bold">Estado</label>
+          <select class="form-select bg-light" [(ngModel)]="statusFilter" (change)="applyFilters()">
+            <option value="ALL">Todos los estados</option>
+            <option value="APPROVED">Aprobadas</option>
+            <option value="PENDING">Pendientes</option>
+            <option value="UNDER_REVIEW">En Revisión</option>
+            <option value="REJECTED">Rechazadas</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="form-label text-muted small fw-bold">Nivel de Riesgo</label>
+          <select class="form-select bg-light" [(ngModel)]="riskFilter" (change)="applyFilters()">
+            <option value="ALL">Todos los riesgos</option>
+            <option value="LOW">Bajo (Low)</option>
+            <option value="MEDIUM">Medio (Medium)</option>
+            <option value="HIGH">Alto (High)</option>
+            <option value="CRITICAL">Crítico (Critical)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted fw-medium">Cargando transacciones...</p>
+  </div>
+
+  <!-- Table -->
+  <div class="card border-0 shadow-sm rounded-4" *ngIf="!isLoading">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-modern align-middle mb-0">
+          <thead class="bg-light text-secondary">
+            <tr>
+              <th class="ps-4">ID</th>
+              <th>Cliente & Canal</th>
+              <th>Monto</th>
+              <th>Riesgo</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th class="text-end pe-4">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="border-top-0">
+            <tr *ngFor="let tx of filteredTransactions">
+              <td class="ps-4 fw-semibold text-secondary">#{{ tx.id }}</td>
+              <td>
+                <div class="fw-semibold text-dark">{{ tx.customerFullName || 'Cliente #' + tx.customerId }}</div>
+                <small class="text-muted"><i class="bi bi-hdd-network me-1"></i>{{ tx.channel }} | {{ tx.type }}</small>
+              </td>
+              <td class="fw-bold text-dark fs-6">{{ tx.currency }} {{ tx.amount | number:'1.2-2' }}</td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="getRiskBadgeClass(tx.riskLevel)">{{ tx.riskLevel }} <span *ngIf="tx.riskScore">({{ tx.riskScore }})</span></span>
+              </td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(tx.status)">{{ tx.status }}</span>
+              </td>
+              <td class="text-muted" style="font-size: 0.85rem;">{{ tx.transactionDateTime | date:'short' }}</td>
+              <td class="text-end pe-4">
+                <button class="btn btn-sm btn-icon-action rounded-circle me-1" title="Ver Detalle" data-bs-toggle="modal" data-bs-target="#txDetailModal" (click)="openDetail(tx)">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-icon-action btn-icon-action-warning rounded-circle me-1" title="Analizar Riesgo" (click)="analyzeRisk(tx.id)" [disabled]="analyzingId === tx.id">
+                  <span *ngIf="analyzingId === tx.id" class="spinner-border spinner-border-sm"></span>
+                  <i *ngIf="analyzingId !== tx.id" class="bi bi-shield-check"></i>
+                </button>
+                <button class="btn btn-sm btn-icon-action btn-icon-action-success rounded-circle" title="Aprobar" (click)="approveTransaction(tx.id)" *ngIf="tx.status !== 'APPROVED'">
+                  <i class="bi bi-check-lg"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredTransactions.length === 0">
+              <td colspan="7" class="text-center py-5">
+                <div class="text-muted mb-2"><i class="bi bi-inbox fs-1"></i></div>
+                <h5 class="fw-bold text-dark">Sin Resultados</h5>
+                <p class="text-secondary mb-0">No se encontraron transacciones con los filtros actuales.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalles -->
+<div class="modal fade" id="txDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden" *ngIf="selectedTransaction">
+      
+      <div class="modal-header border-bottom-0 pb-0 px-4 pt-4 d-flex justify-content-between">
+        <h5 class="modal-title fw-bold text-dark">
+          Transacción <span class="text-primary">#{{ selectedTransaction.id }}</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <div class="glass-panel rounded-4 p-3 bg-light">
+              <small class="text-muted fw-bold text-uppercase">Datos de la Operación</small>
+              <h3 class="fw-bold text-dark mt-2 mb-1">{{ selectedTransaction.currency }} {{ selectedTransaction.amount | number:'1.2-2' }}</h3>
+              <p class="mb-1 text-secondary"><i class="bi bi-calendar me-2"></i>{{ selectedTransaction.transactionDateTime | date:'medium' }}</p>
+              <p class="mb-1 text-secondary"><i class="bi bi-tags me-2"></i>{{ selectedTransaction.type }} | {{ selectedTransaction.channel }}</p>
+              <p class="mb-0 text-secondary"><i class="bi bi-bank me-2"></i>Destino: {{ selectedTransaction.destinationAccount }}</p>
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-6">
+            <div class="glass-panel rounded-4 p-3 h-100" [ngClass]="getRiskBadgeClass(selectedTransaction.riskLevel).replace('badge-', 'bg-opacity-10 bg-').replace('approved', 'success').replace('rejected','danger').replace('under_review','warning')">
+              <small class="text-muted fw-bold text-uppercase">Análisis de Riesgo</small>
+              <div class="mt-2 mb-2 d-flex gap-2">
+                <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(selectedTransaction.status)">{{ selectedTransaction.status }}</span>
+                <span class="badge rounded-pill" [ngClass]="getRiskBadgeClass(selectedTransaction.riskLevel)">Nivel {{ selectedTransaction.riskLevel }}</span>
+              </div>
+              <h5 class="fw-bold mb-1" *ngIf="selectedTransaction.riskScore">Score: {{ selectedTransaction.riskScore }}/100</h5>
+              <div class="progress mt-2" style="height: 6px;" *ngIf="selectedTransaction.riskScore">
+                <div class="progress-bar" [ngClass]="{'bg-success': selectedTransaction.riskLevel==='LOW', 'bg-warning': selectedTransaction.riskLevel==='MEDIUM', 'bg-orange': selectedTransaction.riskLevel==='HIGH', 'bg-danger': selectedTransaction.riskLevel==='CRITICAL'}" [style.width.%]="selectedTransaction.riskScore"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12" *ngIf="selectedTransaction.riskExplanation">
+            <div class="p-3 rounded-4 bg-white border shadow-sm">
+              <h6 class="fw-bold text-dark mb-2"><i class="bi bi-info-circle-fill text-primary me-2"></i>Explicación del Motor Antifraude</h6>
+              <p class="text-secondary small mb-0">{{ selectedTransaction.riskExplanation }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer bg-light border-top-0 p-3">
+        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-warning rounded-pill px-4 text-dark fw-semibold d-flex align-items-center gap-2" (click)="analyzeRisk(selectedTransaction.id)" [disabled]="analyzingId === selectedTransaction.id">
+          <span *ngIf="analyzingId === selectedTransaction.id" class="spinner-border spinner-border-sm"></span>
+          <i *ngIf="analyzingId !== selectedTransaction.id" class="bi bi-shield-check"></i> 
+          {{ analyzingId === selectedTransaction.id ? 'Analizando...' : 'Ejecutar Análisis' }}
+        </button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Transacción -->
+<div class="modal fade" id="createTxModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+        <h5 class="modal-title fw-bold text-dark">Nueva Transacción</h5>
+        <button type="button" id="closeCreateModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="createForm" (ngSubmit)="onSubmitCreate()">
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label small fw-bold text-muted">ID Cliente</label>
+              <input type="number" class="form-control bg-light" formControlName="customerId" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold text-muted">Monto (USD)</label>
+              <input type="number" class="form-control bg-light" formControlName="amount" required step="0.01">
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold text-muted">Tipo</label>
+              <select class="form-select bg-light" formControlName="type">
+                <option value="TRANSFER">Transferencia</option>
+                <option value="PAYMENT">Pago</option>
+                <option value="WITHDRAWAL">Retiro</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold text-muted">Canal</label>
+              <select class="form-select bg-light" formControlName="channel">
+                <option value="WEB">Web</option>
+                <option value="MOBILE">Mobile</option>
+                <option value="ATM">Cajero Automático</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold text-muted">Ubicación Origen</label>
+              <input type="text" class="form-control bg-light" formControlName="originLocation">
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold text-muted">Ubicación / Cuenta Destino</label>
+              <input type="text" class="form-control bg-light" formControlName="destinationAccount">
+            </div>
+          </div>
+          <div class="mt-4 text-end">
+            <button type="button" class="btn btn-secondary rounded-pill px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold" [disabled]="createForm.invalid || isCreating">
+              <span *ngIf="isCreating" class="spinner-border spinner-border-sm me-2"></span>
+              Crear Transacción
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Resultado Explicación -->
+<button id="btnShowExplanation" class="d-none" data-bs-toggle="modal" data-bs-target="#explanationModal"></button>
+<div class="modal fade" id="explanationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-shield-exclamation text-primary me-2"></i>Resultado del Análisis</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <p class="mb-0 text-secondary" style="font-size: 1.05rem;">{{ analyzedExplanation }}</p>
+      </div>
+      <div class="modal-footer bg-light border-top-0 p-3">
+        <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
+</div>

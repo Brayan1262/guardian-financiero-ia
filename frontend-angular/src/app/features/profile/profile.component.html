@@ -1,0 +1,62 @@
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-xl-6">
+      
+      <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center mb-4 border-0 shadow-sm rounded-3">
+        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+        <div>{{ successMessage }}</div>
+      </div>
+
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <!-- Header decorativo -->
+        <div class="profile-header bg-primary"></div>
+        
+        <div class="card-body px-5 pb-5 pt-0 text-center position-relative">
+          
+          <!-- Avatar Flotante -->
+          <div class="avatar-wrapper mx-auto mb-3 shadow-sm bg-white" (click)="triggerFileInput()">
+            <img *ngIf="profile.avatarBase64" [src]="profile.avatarBase64" class="w-100 h-100 object-fit-cover rounded-circle">
+            <div *ngIf="!profile.avatarBase64" class="w-100 h-100 d-flex align-items-center justify-content-center rounded-circle bg-light text-primary">
+              <i class="bi bi-camera-fill fs-2"></i>
+            </div>
+            <div class="avatar-overlay rounded-circle d-flex align-items-center justify-content-center text-white">
+              <i class="bi bi-pencil-fill"></i>
+            </div>
+          </div>
+          <input type="file" id="avatarUpload" class="d-none" accept="image/*" (change)="onFileSelected($event)">
+
+          <h3 class="fw-bold text-dark mb-1">{{ profile.fullName || 'Usuario' }}</h3>
+          <span class="badge badge-in_review px-3 py-2 rounded-pill mb-4">{{ originalRole || 'ANALISTA' }}</span>
+
+          <hr class="text-muted opacity-25 mb-4">
+
+          <!-- Formulario de Edición -->
+          <form class="text-start" (ngSubmit)="saveProfile()">
+            
+            <div class="form-floating mb-4">
+              <input type="text" class="form-control bg-light" id="floatingFullName" name="fullName" [(ngModel)]="profile.fullName" placeholder="Nombre Completo" required>
+              <label for="floatingFullName" class="text-secondary"><i class="bi bi-person me-2"></i>Nombre Completo</label>
+            </div>
+
+            <div class="form-floating mb-4">
+              <input type="email" class="form-control bg-light" id="floatingEmail" name="email" [(ngModel)]="profile.email" placeholder="Correo Visible" required>
+              <label for="floatingEmail" class="text-secondary"><i class="bi bi-envelope me-2"></i>Correo Visible</label>
+              <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i> Este correo es solo visual y no cambia tu inicio de sesión real en el backend.</div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-5">
+              <button type="button" class="btn btn-light px-4 py-2 rounded-pill text-danger fw-semibold btn-animate" (click)="resetProfile()">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>Restablecer
+              </button>
+              <button type="submit" class="btn btn-save-profile px-5 py-2 rounded-pill fw-semibold shadow-sm">
+                Guardar Cambios
+              </button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,1 +1,238 @@
-/* You can add global styles to this file, and also import other style files */
+/* Variables Globales de Color (Fintech) */
+:root {
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-main: #111827;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+
+  --primary-dark: #0f172a;
+  --primary-blue: #2563eb;
+  --primary-purple: #7c3aed;
+  --primary-light: #38bdf8;
+  
+  --success-color: #22c55e;
+  --warning-color: #facc15;
+  --risk-color: #f97316;
+  --critical-color: #ef4444;
+}
+
+[data-theme="dark"] {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+}
+
+body, html {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Utility overrides to use CSS variables */
+.bg-white, .card, .glass-panel {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+.bg-light {
+  background-color: var(--bg-main) !important;
+}
+.text-dark {
+  color: var(--text-main) !important;
+}
+.text-secondary, .text-muted {
+  color: var(--text-muted) !important;
+}
+.border, .border-bottom, .border-top, .border-end, .border-start {
+  border-color: var(--border-color) !important;
+}
+
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Badges funcionales */
+.badge-low, .badge-approved, .badge-resolved {
+  background-color: #dcfce7 !important;
+  color: #166534 !important;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 0.35em 0.8em;
+}
+
+.badge-medium, .badge-pending {
+  background-color: #fef08a !important;
+  color: #854d0e !important;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 0.35em 0.8em;
+}
+
+.badge-high, .badge-under_review {
+  background-color: #ffedd5 !important;
+  color: #ea580c !important;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 0.35em 0.8em;
+}
+
+.badge-critical, .badge-rejected, .badge-confirmed_fraud {
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 0.35em 0.8em;
+}
+
+.badge-in_review {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 0.35em 0.8em;
+}
+
+.badge-false_positive {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 0.35em 0.8em;
+}
+
+/* Estilos dinámicos para tablas globales */
+table, .table, .table-modern {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+}
+
+table thead th, .table thead th, .table-modern thead th {
+  background-color: var(--bg-main) !important;
+  color: var(--text-muted) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 12px !important;
+  text-align: left;
+  border-top: none !important;
+}
+
+table tbody tr, .table tbody tr, .table-modern tbody tr {
+  background-color: var(--bg-card) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+table tbody td, .table tbody td, .table-modern tbody td {
+  padding: 12px !important;
+  color: var(--text-main) !important;
+  background-color: var(--bg-card) !important;
+  border: none !important;
+  vertical-align: middle;
+}
+
+/* Efecto hover sutil */
+table tbody tr:hover, .table tbody tr:hover, .table-modern tbody tr:hover,
+table tbody tr:hover td, .table tbody tr:hover td, .table-modern tbody tr:hover td {
+  background-color: var(--bg-main) !important;
+}
+
+/* Forzar reset de las variables de bootstrap en la tabla */
+.table, .table-light, .table-dark {
+  --bs-table-bg: transparent !important;
+  --bs-table-color: var(--text-main) !important;
+  --bs-table-hover-bg: var(--bg-main) !important;
+}
+
+/* Botones animados */
+.btn, .btn-animate {
+  transition: all 0.3s ease !important;
+}
+.btn:hover:not(:disabled), .btn-animate:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.btn:active:not(:disabled), .btn-animate:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-icon-action {
+  background-color: transparent;
+  color: #64748b;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+.btn-icon-action:hover {
+  background-color: #f1f5f9;
+  color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+.btn-icon-action-warning:hover { color: #f59e0b !important; }
+.btn-icon-action-danger:hover { color: #ef4444 !important; }
+.btn-icon-action-success:hover { color: #22c55e !important; }
+
+/* Skeletons */
+.skeleton-box {
+  display: inline-block;
+  height: 1em;
+  position: relative;
+  overflow: hidden;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+}
+.skeleton-box::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+  content: '';
+}
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* SweetAlert overrides si se usan modales propios, animaciones base */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: scale(0.95);
+}
+.modal.show .modal-dialog {
+  transform: scale(1);
+}
+
+/* Antiguo Dark Mode eliminado ya que se maneja globalmente ahora */
