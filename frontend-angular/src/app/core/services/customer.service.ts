@@ -12,8 +12,12 @@ export class CustomerService {
 
   constructor(private http: HttpClient) {}
 
-  getAllCustomers(): Observable<CustomerResponse[]> {
+  getCustomers(): Observable<CustomerResponse[]> {
     return this.http.get<CustomerResponse[]>(this.apiUrl);
+  }
+
+  searchCustomers(name: string): Observable<CustomerResponse[]> {
+    return this.http.get<CustomerResponse[]>(`${this.apiUrl}/search?name=${encodeURIComponent(name)}`);
   }
 
   getCustomerById(id: number): Observable<CustomerResponse> {
@@ -26,6 +30,10 @@ export class CustomerService {
 
   updateCustomer(id: number, data: CustomerRequest): Observable<CustomerResponse> {
     return this.http.put<CustomerResponse>(`${this.apiUrl}/${id}`, data);
+  }
+
+  changeStatus(id: number, status: string): Observable<CustomerResponse> {
+    return this.http.patch<CustomerResponse>(`${this.apiUrl}/${id}/status?status=${status}`, {});
   }
 
   deleteCustomer(id: number): Observable<void> {

@@ -1,13 +1,18 @@
 <div class="container-fluid py-4 animate-fade-in">
-  
-  <div class="d-flex justify-content-between align-items-center mb-4">
+
+  <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center shadow-sm border-0 mb-4 animate-fade-in" role="alert">
+    <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+    <div class="fw-medium">{{ successMessage }}</div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
       <h3 class="fw-bold text-dark mb-1">Directorio de Clientes</h3>
-      <p class="text-secondary mb-0">Gestión de usuarios y su estado en el sistema antifraude.</p>
+      <p class="text-secondary mb-0">Administra el ciclo de vida y los estados de los clientes.</p>
     </div>
     <div class="d-flex gap-2">
       <button class="btn btn-light shadow-sm rounded-pill px-4 text-primary fw-semibold btn-animate" (click)="loadCustomers()">
-        <i class="bi bi-arrow-clockwise"></i>
+        <i class="bi bi-arrow-clockwise me-2"></i>Actualizar
       </button>
       <button class="btn btn-primary shadow-sm rounded-pill px-4 fw-semibold btn-animate" data-bs-toggle="modal" data-bs-target="#customerModal" (click)="openCreateModal()">
         <i class="bi bi-plus-lg me-2"></i>Nuevo Cliente
@@ -17,23 +22,26 @@
 
   <!-- Filters Row -->
   <div class="card border-0 shadow-sm rounded-4 mb-4">
-    <div class="card-body p-4 d-flex gap-3">
-      <div class="flex-grow-1">
-        <label class="form-label text-muted small fw-bold">Buscar Cliente</label>
-        <div class="input-group">
-          <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-          <input type="text" class="form-control bg-light border-start-0" placeholder="Nombre, Documento o Correo..." [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
+    <div class="card-body p-4">
+      <div class="row g-3">
+        <div class="col-12 col-md-5">
+          <label class="form-label text-muted small fw-bold">Buscar en Directorio</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" class="form-control bg-light border-start-0" placeholder="Nombre, Documento o Email..." [(ngModel)]="searchTerm" (keyup.enter)="search()">
+            <button class="btn btn-primary px-4 fw-semibold" type="button" (click)="search()">Buscar</button>
+          </div>
         </div>
-      </div>
-      <div class="flex-grow-1" style="max-width: 300px;">
-        <label class="form-label text-muted small fw-bold">Estado</label>
-        <select class="form-select bg-light border-0" [(ngModel)]="statusFilter" (change)="applyFilters()">
-          <option value="ALL">Todos</option>
-          <option value="ACTIVE">Activos</option>
-          <option value="INACTIVE">Inactivos</option>
-          <option value="BLOCKED">Bloqueados</option>
-          <option value="UNDER_REVIEW">En Revisión</option>
-        </select>
+        <div class="col-12 col-md-4 offset-md-3">
+          <label class="form-label text-muted small fw-bold">Filtrar por Estado</label>
+          <select class="form-select bg-light border-0" [(ngModel)]="statusFilter" (change)="applyFilters()">
+            <option value="ALL">Todos los estados</option>
+            <option value="ACTIVE">Activos</option>
+            <option value="UNDER_REVIEW">En Revisión</option>
+            <option value="BLOCKED">Bloqueados</option>
+            <option value="INACTIVE">Inactivos</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
@@ -46,47 +54,64 @@
   <!-- Table -->
   <div class="card border-0 shadow-sm rounded-4" *ngIf="!isLoading">
     <div class="card-body p-0">
-      <div class="table-responsive">
+      <div class="table-responsive" style="min-height: 300px;">
         <table class="table table-modern align-middle mb-0">
           <thead class="bg-light text-secondary">
             <tr>
               <th class="ps-4">ID</th>
-              <th>Nombre & Documento</th>
+              <th>Documento</th>
+              <th>Nombre Completo</th>
               <th>Contacto</th>
               <th>Estado</th>
-              <th>Registro</th>
               <th class="text-end pe-4">Acciones</th>
             </tr>
           </thead>
           <tbody class="border-top-0">
-            <tr *ngFor="let customer of filteredCustomers">
-              <td class="ps-4 fw-semibold text-secondary">#{{ customer.id }}</td>
+            <tr *ngFor="let c of filteredCustomers">
+              <td class="ps-4 fw-bold text-dark">#{{ c.id }}</td>
               <td>
-                <div class="fw-bold text-dark">{{ customer.fullName }}</div>
-                <small class="text-muted">{{ customer.documentType }} - {{ customer.documentNumber }}</small>
+                <div class="fw-semibold text-secondary">{{ c.documentNumber }}</div>
+                <small class="text-muted">{{ c.documentType }}</small>
               </td>
               <td>
-                <div class="text-dark small"><i class="bi bi-envelope me-1"></i>{{ customer.email }}</div>
-                <div class="text-muted small"><i class="bi bi-telephone me-1"></i>{{ customer.phoneNumber || 'N/A' }}</div>
+                <div class="fw-bold text-dark">{{ c.fullName }}</div>
               </td>
               <td>
-                <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(customer.status)">{{ customer.status }}</span>
+                <div class="text-secondary small mb-1"><i class="bi bi-envelope me-1 text-primary"></i>{{ c.email }}</div>
+                <div class="text-secondary small" *ngIf="c.phoneNumber"><i class="bi bi-telephone me-1 text-primary"></i>{{ c.phoneNumber }}</div>
               </td>
-              <td class="text-muted" style="font-size: 0.85rem;">{{ customer.registrationDate | date:'shortDate' }}</td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(c.status)">{{ c.status }}</span>
+              </td>
               <td class="text-end pe-4">
-                <button class="btn btn-sm btn-icon-action rounded-circle me-2" title="Editar Cliente" data-bs-toggle="modal" data-bs-target="#customerModal" (click)="openEditModal(customer)">
-                  <i class="bi bi-pencil-fill"></i>
+                
+                <div class="dropdown d-inline-block me-1">
+                  <button class="btn btn-sm btn-icon-action btn-icon-action-warning rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Cambiar Estado">
+                    <i class="bi bi-arrow-repeat"></i>
+                  </button>
+                  <ul class="dropdown-menu shadow border-0 rounded-3" style="background-color: var(--bg-card); min-width: 150px;">
+                    <li><h6 class="dropdown-header text-muted">Estado del Cliente</h6></li>
+                    <li><button class="dropdown-item fw-semibold text-success" (click)="changeStatus(c, 'ACTIVE')"><i class="bi bi-check-circle me-2"></i>Activo</button></li>
+                    <li><button class="dropdown-item fw-semibold text-warning" (click)="changeStatus(c, 'UNDER_REVIEW')"><i class="bi bi-eye me-2"></i>En Revisión</button></li>
+                    <li><button class="dropdown-item fw-semibold text-danger" (click)="changeStatus(c, 'BLOCKED')"><i class="bi bi-slash-circle me-2"></i>Bloqueado</button></li>
+                  </ul>
+                </div>
+
+                <button class="btn btn-sm btn-icon-action btn-icon-action-success rounded-circle me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#customerModal" (click)="openEditModal(c)">
+                  <i class="bi bi-pencil"></i>
                 </button>
-                <button class="btn btn-sm btn-icon-action btn-icon-action-danger rounded-circle" title="Eliminar Cliente" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="prepareDelete(customer)">
-                  <i class="bi bi-trash-fill"></i>
+                
+                <button class="btn btn-sm btn-icon-action btn-icon-action-danger rounded-circle" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="prepareDelete(c)">
+                  <i class="bi bi-trash"></i>
                 </button>
+
               </td>
             </tr>
             <tr *ngIf="filteredCustomers.length === 0">
               <td colspan="6" class="text-center py-5">
                 <div class="text-muted mb-2"><i class="bi bi-people fs-1 opacity-50"></i></div>
-                <h5 class="fw-bold text-dark">Sin Resultados</h5>
-                <p class="text-secondary mb-0">No se encontraron clientes.</p>
+                <h5 class="fw-bold text-dark">Directorio Vacío</h5>
+                <p class="text-secondary mb-0">No se encontraron clientes con esos parámetros.</p>
               </td>
             </tr>
           </tbody>
@@ -96,79 +121,78 @@
   </div>
 </div>
 
-<!-- Form Modal -->
+<!-- Modal Formulario (Crear/Editar) -->
 <div class="modal fade" id="customerModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg rounded-4">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg rounded-4" style="background-color: var(--bg-card); color: var(--text-main);">
       <div class="modal-header border-0 pb-0 pt-4 px-4">
-        <h5 class="modal-title fw-bold text-dark">{{ isEditMode ? 'Editar Cliente' : 'Nuevo Cliente' }}</h5>
+        <h5 class="modal-title fw-bold">
+          {{ isEditMode ? 'Editar Cliente' : 'Nuevo Cliente' }}
+        </h5>
         <button type="button" class="btn-close" id="customerModalClose" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form [formGroup]="customerForm" (ngSubmit)="saveCustomer()">
-        <div class="modal-body p-4">
+      <div class="modal-body p-4">
+        
+        <form [formGroup]="customerForm" (ngSubmit)="saveCustomer()">
           <div class="row g-3">
-            <div class="col-md-4">
-              <label class="form-label text-muted small fw-bold">Tipo Doc.</label>
-              <select class="form-select bg-light border-0" formControlName="documentType">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold small text-muted">Nombre Completo</label>
+              <input type="text" class="form-control border-0" formControlName="fullName" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color) !important;">
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold small text-muted">Correo Electrónico</label>
+              <input type="email" class="form-control border-0" formControlName="email" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color) !important;">
+            </div>
+            
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-bold small text-muted">Tipo Documento</label>
+              <select class="form-select border-0" formControlName="documentType" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color) !important;">
                 <option value="DNI">DNI</option>
                 <option value="PASSPORT">Pasaporte</option>
-                <option value="ID_CARD">Cédula</option>
+                <option value="RUC">RUC</option>
+                <option value="OTHER">Otro</option>
               </select>
             </div>
-            <div class="col-md-8">
-              <label class="form-label text-muted small fw-bold">N° Documento</label>
-              <input type="text" class="form-control bg-light border-0" formControlName="documentNumber">
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-bold small text-muted">N° Documento</label>
+              <input type="text" class="form-control border-0" formControlName="documentNumber" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color) !important;">
             </div>
-            <div class="col-12">
-              <label class="form-label text-muted small fw-bold">Nombre Completo</label>
-              <input type="text" class="form-control bg-light border-0" formControlName="fullName">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label text-muted small fw-bold">Correo Electrónico</label>
-              <input type="email" class="form-control bg-light border-0" formControlName="email">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label text-muted small fw-bold">Teléfono</label>
-              <input type="text" class="form-control bg-light border-0" formControlName="phoneNumber">
-            </div>
-            <div class="col-12" *ngIf="isEditMode">
-              <label class="form-label text-muted small fw-bold">Estado</label>
-              <select class="form-select bg-light border-0" formControlName="status">
-                <option value="ACTIVE">Activo</option>
-                <option value="INACTIVE">Inactivo</option>
-                <option value="BLOCKED">Bloqueado</option>
-                <option value="UNDER_REVIEW">En Revisión</option>
-              </select>
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-bold small text-muted">Teléfono</label>
+              <input type="text" class="form-control border-0" formControlName="phoneNumber" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color) !important;">
             </div>
           </div>
-        </div>
-        <div class="modal-footer border-0 pt-0 px-4 pb-4">
-          <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold text-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold" [disabled]="customerForm.invalid || isSaving">
-            <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isSaving ? 'Guardando...' : 'Guardar Cliente' }}
-          </button>
-        </div>
-      </form>
+          
+          <div class="mt-5 d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold" [disabled]="customerForm.invalid || isSaving">
+              <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isEditMode ? 'Guardar Cambios' : 'Crear Cliente' }}
+            </button>
+          </div>
+        </form>
+
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Delete Modal -->
+<!-- Modal Eliminar -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg rounded-4">
+    <div class="modal-content border-0 shadow-lg rounded-4" style="background-color: var(--bg-card); color: var(--text-main);">
+      <div class="modal-header border-0 pb-0 pt-4 px-4 text-center">
+        <h5 class="modal-title fw-bold text-danger w-100"><i class="bi bi-exclamation-triangle-fill fs-2 d-block mb-2"></i> Advertencia</h5>
+      </div>
       <div class="modal-body p-4 text-center">
-        <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 4rem;"></i>
-        <h4 class="fw-bold mt-3">¿Eliminar cliente?</h4>
-        <p class="text-secondary mb-4">Vas a eliminar permanentemente a <strong>{{ customerToDelete?.fullName }}</strong>. Esta acción no se puede deshacer.</p>
-        <div class="d-flex justify-content-center gap-3">
-          <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold text-secondary" id="deleteModalClose" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-danger rounded-pill px-4 fw-semibold" (click)="confirmDelete()" [disabled]="isSaving">
-            <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isSaving ? 'Eliminando...' : 'Sí, eliminar' }}
-          </button>
-        </div>
+        <p class="mb-0 fs-5">¿Estás seguro de que deseas eliminar permanentemente al cliente <strong>{{ customerToDelete?.fullName }}</strong>?</p>
+        <p class="text-muted small mt-2">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer border-0 pt-0 px-4 pb-4 justify-content-center">
+        <button type="button" class="btn btn-secondary rounded-pill px-4 fw-semibold" id="deleteModalClose" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger rounded-pill px-4 fw-semibold" (click)="confirmDelete()" [disabled]="isSaving">
+          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span> Sí, eliminar
+        </button>
       </div>
     </div>
   </div>

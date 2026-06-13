@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { CustomerService } from '../../core/services/customer.service';
 import { CustomerResponse } from '../../core/models/customer.model';
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.css'
 })
@@ -15,6 +16,7 @@ export class CustomersComponent implements OnInit {
   customers: CustomerResponse[] = [];
   filteredCustomers: CustomerResponse[] = [];
   isLoading = true;
+  successMessage = '';
   
   searchTerm = '';
   statusFilter = 'ALL';
@@ -46,8 +48,9 @@ export class CustomersComponent implements OnInit {
 
   loadCustomers(): void {
     this.isLoading = true;
-    this.customerService.getAllCustomers().subscribe({
+    this.customerService.getCustomers().subscribe({
       next: (data) => {
+        console.log('API Response (getCustomers):', data);
         this.customers = data;
         this.applyFilters();
         this.isLoading = false;
@@ -59,13 +62,31 @@ export class CustomersComponent implements OnInit {
     });
   }
 
+  search(): void {
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      this.loadCustomers();
+      return;
+    }
+
+    this.isLoading = true;
+    this.customerService.searchCustomers(this.searchTerm).subscribe({
+      next: (data) => {
+        console.log('API Response (searchCustomers):', data);
+        this.customers = data;
+        this.applyFilters();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error searching customers', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
   applyFilters(): void {
     this.filteredCustomers = this.customers.filter(c => {
-      const matchSearch = c.fullName.toLowerCase().includes(this.searchTerm.toLowerCase()) || 
-                          c.documentNumber.includes(this.searchTerm) ||
-                          c.email.toLowerCase().includes(this.searchTerm.toLowerCase());
       const matchStatus = this.statusFilter === 'ALL' || c.status === this.statusFilter;
-      return matchSearch && matchStatus;
+      return matchStatus;
     });
   }
 
@@ -97,22 +118,43 @@ export class CustomersComponent implements OnInit {
     if (this.isEditMode && this.selectedCustomerId) {
       this.customerService.updateCustomer(this.selectedCustomerId, req).subscribe({
         next: (res) => {
+          console.log('API Response (updateCustomer):', res);
           this.loadCustomers();
           this.closeModal('customerModal');
+          this.showSuccess('Cliente actualizado exitosamente.');
           this.isSaving = false;
         },
-        error: (err) => { console.error(err); this.isSaving = false; }
+        error: (err) => { 
+          console.error('Error updating customer', err); 
+          this.isSaving = false; 
+        }
       });
     } else {
       this.customerService.createCustomer(req).subscribe({
         next: (res) => {
+          console.log('API Response (createCustomer):', res);
           this.loadCustomers();
           this.closeModal('customerModal');
+          this.showSuccess('Cliente creado exitosamente.');
           this.isSaving = false;
         },
-        error: (err) => { console.error(err); this.isSaving = false; }
+        error: (err) => { 
+          console.error('Error creating customer', err); 
+          this.isSaving = false; 
+        }
       });
     }
+  }
+
+  changeStatus(customer: CustomerResponse, newStatus: string): void {
+    this.customerService.changeStatus(customer.id, newStatus).subscribe({
+      next: (res) => {
+        console.log('API Response (changeStatus):', res);
+        this.loadCustomers();
+        this.showSuccess(`Estado del cliente cambiado a ${newStatus}.`);
+      },
+      error: (err) => console.error('Error changing status', err)
+    });
   }
 
   prepareDelete(customer: CustomerResponse): void {
@@ -124,12 +166,17 @@ export class CustomersComponent implements OnInit {
     this.isSaving = true;
     this.customerService.deleteCustomer(this.customerToDelete.id).subscribe({
       next: () => {
+        console.log('API Response (deleteCustomer): SUCCESS');
         this.loadCustomers();
         this.closeModal('deleteModal');
+        this.showSuccess('Cliente eliminado exitosamente.');
         this.isSaving = false;
         this.customerToDelete = null;
       },
-      error: (err) => { console.error(err); this.isSaving = false; }
+      error: (err) => { 
+        console.error('Error deleting customer', err); 
+        this.isSaving = false; 
+      }
     });
   }
 
@@ -138,8 +185,14 @@ export class CustomersComponent implements OnInit {
     if (btn) btn.click();
   }
 
+  showSuccess(msg: string): void {
+    this.successMessage = msg;
+    setTimeout(() => this.successMessage = '', 4000);
+  }
+
   getStatusBadgeClass(status: string): string {
-    switch (status) {
+    if (!status) return 'bg-secondary';
+    switch (status.toUpperCase()) {
       case 'ACTIVE': return 'badge-approved';
       case 'INACTIVE': return 'badge-false_positive';
       case 'BLOCKED': return 'badge-rejected';
